@@ -2,7 +2,7 @@
 </script>
 
 <template>
-  <h1>Hello Vue</h1>
+  <h1 class="text-3xl font-bold">Hello Vue</h1>
   
   <main>
     
