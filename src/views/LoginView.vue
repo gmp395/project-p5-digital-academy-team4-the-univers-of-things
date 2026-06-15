@@ -19,5 +19,20 @@ import LoginForm from '@/components/LoginForm.vue';
 </script>
 
 <style scoped>
-/* Stiller bir sonraki adımda eklenecek */
+.login-container { display: flex; height: 100vh; width: 100%; }
+
+.login-brand {
+  flex: 1;
+  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('@/assets/cineresim.jpg');
+  background-size: cover;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  color: white; text-align: center; padding: 20px;
+}
+
+.login-form-side {
+  flex: 1;
+  display: flex; align-items: center; justify-content: center;
+  background-color: #0f172a;
+  padding: 40px;
+}
 </style>
