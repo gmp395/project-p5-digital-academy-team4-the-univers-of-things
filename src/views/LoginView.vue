@@ -2,7 +2,7 @@
   <div class="login-container">
     <section class="login-brand">
       <div class="brand-content">
-        <img src="@/assets/logo.png" alt="CineMagic Logo" />
+        <img src="@/assets/Cinemagiclogo.png" alt="CineMagic Logo" />
         <h1>CineMagic</h1>
         <p>Inicia sesión para descubrir la magia de cada personaje y gestionar tus favoritos.</p>
       </div>
