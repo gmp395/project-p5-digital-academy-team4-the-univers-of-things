@@ -6,11 +6,9 @@
       <!-- Logo + navegación principal -->
       <div class="flex items-center gap-12">
         <RouterLink to="/" class="flex items-center">
-          <img
-            src="@/assets/img/logo.jpeg"
-            alt="The Universe of Things logo"
-            class="h-10 w-auto object-contain"
-          />
+          <h1 class="font-display-lg text-display-lg-mobile font-bold text-primary tracking-tighter">
+            CineMagic
+          </h1>
         </RouterLink>
  
         <div class="hidden md:flex items-center gap-8">
@@ -27,19 +25,14 @@
       <!-- Login / Register -->
       <div class="flex items-center gap-6">
         <div class="hidden lg:flex items-center gap-4">
-          <RouterLink
-            to="/login"
-            class="text-on-surface-variant hover:text-on-surface transition-opacity duration-300 font-label-lg text-label-lg"
-          >
-            Login
-          </RouterLink>
-          <RouterLink
-            to="/register"
-            class="px-5 py-1.5 bg-primary-container text-on-primary-container rounded-full font-label-lg text-label-lg hover:opacity-90 transition-all"
-          >
-            Register
-          </RouterLink>
-        </div>
+  <RouterLink
+    to="/login"
+    class="text-on-surface-variant hover:text-on-surface transition-opacity duration-300 font-label-lg text-label-lg"
+    active-class="text-primary font-bold border-b-2 border-primary"
+  >
+    Login
+  </RouterLink>
+</div>
  
         <!-- Botón menú móvil -->
         <button
@@ -79,15 +72,8 @@
           to="/login"
           class="text-body-md text-on-surface-variant hover:text-on-surface py-2"
           @click="isMenuOpen = false"
-        >
+      >
           Login
-        </RouterLink>
-        <RouterLink
-          to="/register"
-          class="text-on-primary-container bg-primary-container text-center font-label-lg text-label-lg px-4 py-2 rounded-lg"
-          @click="isMenuOpen = false"
-        >
-          Register
         </RouterLink>
       </div>
     </transition>
