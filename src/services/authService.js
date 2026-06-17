@@ -9,7 +9,7 @@ export const authService = {
     }
     return {
       success: false,
-      message: "Invalid email or password."  // Kullanıcıya gösterilecek
+      message: "Invalid email or password." 
     }
   }
 }

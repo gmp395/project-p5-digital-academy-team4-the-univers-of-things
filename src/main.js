@@ -5,15 +5,15 @@ import { createPinia } from 'pinia'
 
 import App from './App.vue'
 import router from './router'
-import { useAuthStore } from './stores/authStore'  // ← ekle
+import { useAuthStore } from './stores/authStore' 
 
 const app = createApp(App)
 
-const pinia = createPinia()  // ← önce değişkene al
-app.use(pinia)               // ← sonra use et
+const pinia = createPinia()  
+app.use(pinia)               
 app.use(router)
 
-const authStore = useAuthStore()  // ← pinia'dan sonra çağır
-authStore.initAuth()              // ← token kontrolü
+const authStore = useAuthStore() 
+authStore.initAuth()              
 
 app.mount('#app')

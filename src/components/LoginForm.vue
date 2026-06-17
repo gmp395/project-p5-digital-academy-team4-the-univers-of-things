@@ -9,7 +9,6 @@
       <input v-model="password" type="password" placeholder="••••••••" />
     </div>
 
-    <!-- Hata mesajı eklendi -->
     <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
 
     <button type="submit" class="login-btn" :disabled="loading">
@@ -37,7 +36,7 @@ const handleLogin = async () => {
   await authStore.login(email.value, password.value)
 
   if (authStore.isAuthenticated) {
-    router.push('/')  // ← başarılı → ana sayfa
+    router.push('/') 
   } else {
     errorMessage.value = 'Invalid email or password'
   }
