@@ -7,10 +7,11 @@ export const useAuthStore = defineStore('auth', {
     isAuthenticated: false
   }),
 
- actions: {
-  logout() {
-    this.user = null
-    this.token = null
-    this.isAuthenticated = false
+  actions: {
+    logout() {
+      this.user = null
+      this.token = null
+      this.isAuthenticated = false
+    }
   }
-}
+})
