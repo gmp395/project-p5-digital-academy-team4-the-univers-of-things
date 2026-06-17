@@ -15,13 +15,17 @@ onMounted(async () => {
 </script>
 
 <template>
-  <main>
-    <h1>Disney Characters</h1>
+  <main class="min-h-screen bg-slate-950 p-8">
+    <h1 class="mb-8 text-3xl font-bold text-white">
+      Disney Characters
+    </h1>
 
-    <TarjetasPersonajes
-      v-for="personaje in personajes"
-      :key="personaje._id"
-      :personaje="personaje"
-    />
+    <section class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+      <TarjetasPersonajes
+        v-for="personaje in personajes"
+        :key="personaje._id"
+        :personaje="personaje"
+      />
+    </section>
   </main>
 </template>
