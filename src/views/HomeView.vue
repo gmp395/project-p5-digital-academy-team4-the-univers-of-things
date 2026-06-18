@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import TarjetasPersonajes from '../componentes/tarjetaspersonajes.vue'
+import Tarjetaspersonajes from '@/components/cards/tarjetaspersonajes.vue'
 
 const personajes = ref([])
 
@@ -21,7 +21,7 @@ onMounted(async () => {
     </h1>
 
     <section class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
-      <TarjetasPersonajes
+      <Tarjetaspersonajes
         v-for="personaje in personajes"
         :key="personaje._id"
         :personaje="personaje"
