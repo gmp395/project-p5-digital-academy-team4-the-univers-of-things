@@ -15,7 +15,8 @@ const router = createRouter({
       name: 'login',
       component: LoginView,
     }
-  ],
+  ]
 })
 
 export default router
+
