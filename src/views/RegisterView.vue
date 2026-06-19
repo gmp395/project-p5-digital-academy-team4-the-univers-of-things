@@ -84,3 +84,78 @@
     </div>
   </div>
 </template>
+<script setup>
+import { ref, reactive } from 'vue'
+import { useRouter } from 'vue-router'
+import { authService } from '@/services/authService'
+import { User, Mail, Lock, Eye, EyeOff, ShieldCheck, ArrowRight } from 'lucide-vue-next'
+
+const router = useRouter()
+
+const showPassword = ref(false)
+
+const form = reactive({
+  name: '',
+  email: '',
+  password: '',
+  confirmPassword: ''
+})
+
+const errors = reactive({
+  name: '',
+  email: '',
+  password: '',
+  confirmPassword: ''
+})
+
+const errorMessage = ref('')
+
+function validateForm() {
+  let valid = true
+  errors.name = ''
+  errors.email = ''
+  errors.password = ''
+  errors.confirmPassword = ''
+
+  if (!form.name.trim()) {
+    errors.name = 'El nombre es obligatorio.'
+    valid = false
+  }
+
+  if (!form.email.trim()) {
+    errors.email = 'El email es obligatorio.'
+    valid = false
+  }
+
+  if (!form.password) {
+    errors.password = 'La contraseña es obligatoria.'
+    valid = false
+  } else if (form.password.length < 6) {
+    errors.password = 'La contraseña debe tener al menos 6 caracteres.'
+    valid = false
+  }
+
+  if (!form.confirmPassword) {
+    errors.confirmPassword = 'Confirma tu contraseña.'
+    valid = false
+  } else if (form.password !== form.confirmPassword) {
+    errors.confirmPassword = 'Las contraseñas no coinciden.'
+    valid = false
+  }
+
+  return valid
+}
+
+function handleRegister() {
+  errorMessage.value = ''
+  if (!validateForm()) return
+
+  const result = authService.register(form.name, form.email, form.password)
+
+  if (result.success) {
+    router.push({ name: 'login', query: { registered: 'true' } })
+  } else {
+    errorMessage.value = result.message
+  }
+}
+</script>
