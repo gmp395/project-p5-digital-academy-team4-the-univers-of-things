@@ -1,6 +1,6 @@
 <template>
   <section
-    class="relative h-[500px] overflow-hidden rounded-3xl mb-12"
+    class="relative h-125 overflow-hidden rounded-3xl mb-12"
   >
     <div class="hero-content">
       <h2>Descubre la magia de cada personaje</h2>
