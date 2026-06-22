@@ -10,16 +10,51 @@
 
       <section class="favorites-page__add">
         <h2>Añadir favorito</h2>
-        <p>Busca y organiza tus personajes favoritos desde aquí.</p>
+
+        <div class="favorites-page__form">
+          <label>
+            Personaje
+            <select v-model="selectedCharacterId">
+              <option value="">Selecciona un personaje</option>
+              <option
+                v-for="character in availableCharacters"
+                :key="character._id"
+                :value="character._id"
+              >
+                {{ character.name }}
+              </option>
+            </select>
+          </label>
+
+          <label>
+            Descripción personalizada
+            <input
+              v-model="newDescription"
+              type="text"
+              placeholder="Ejemplo: Mi personaje favorito"
+            />
+          </label>
+
+          <button type="button" @click="addFavorite">Añadir favorito</button>
+        </div>
       </section>
 
       <section class="favorites-page__grid">
         <FavoriteCard
           v-for="favorite in favorites"
           :key="favorite._id"
-          :title="favorite.name"
-          description="Personaje del universo Disney."
+          :title="favorite.customTitle"
+          :description="favorite.customDescription"
           :image="favorite.imageUrl"
+          :rating="favorite.rating"
+          @delete="favoritesStore.removeFavorite(favorite._id)"
+          @rate="favoritesStore.rateFavorite(favorite._id, $event)"
+          @edit="
+            favoritesStore.updateFavorite(favorite._id, {
+              customTitle: $event.title,
+              customDescription: $event.description,
+            })
+          "
         />
       </section>
 
@@ -31,21 +66,56 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import UserSidebar from '@/components/user/UserSidebar.vue'
-import Footer from '@/components/Footer.vue'
-import FavoriteCard from '@/components/user/FavoriteCard.vue'
+import { ref, onMounted } from "vue";
+import { storeToRefs } from "pinia";
+import UserSidebar from "@/components/user/UserSidebar.vue";
+import Footer from "@/components/Footer.vue";
+import FavoriteCard from "@/components/user/FavoriteCard.vue";
+import { useFavoritesStore } from "@/stores/favoritesStore";
 
-const favorites = ref([])
+const favoritesStore = useFavoritesStore();
+const { favorites } = storeToRefs(favoritesStore);
+
+const availableCharacters = ref([]);
+const selectedCharacterId = ref("");
+const newDescription = ref("");
+
+const addFavorite = () => {
+  if (!selectedCharacterId.value) {
+    return;
+  }
+
+  const selectedCharacter = availableCharacters.value.find(
+    (character) => character._id === Number(selectedCharacterId.value),
+  );
+
+  if (!selectedCharacter) {
+    return;
+  }
+
+  favoritesStore.addFavorite({
+    ...selectedCharacter,
+    customDescription: newDescription.value || "Personaje del universo Disney.",
+  });
+
+  selectedCharacterId.value = "";
+  newDescription.value = "";
+};
 
 onMounted(async () => {
-  const response = await fetch('https://api.disneyapi.dev/character?pageSize=4')
-  const data = await response.json()
+  const response = await fetch(
+    "https://api.disneyapi.dev/character?page=3&pageSize=20",
+  );
+  const data = await response.json();
 
-  favorites.value = data.data
-    .filter((character) => character.imageUrl)
-    .slice(0, 4)
-})
+  availableCharacters.value = data.data.filter(
+    (character) => character.imageUrl,
+  );
+
+  availableCharacters.value.slice(0, 4).forEach((character) => {
+    favoritesStore.addFavorite(character);
+  });
+});
 </script>
 
 <style scoped lang="scss">
@@ -118,6 +188,40 @@ onMounted(async () => {
   }
 }
 
+.favorites-page__form {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 16px;
+  align-items: end;
+
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    color: #cbd5e1;
+    font-size: 0.9rem;
+  }
+
+  select,
+  input {
+    background: #253247;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 10px 12px;
+    color: white;
+  }
+
+  button {
+    background: #93c5fd;
+    color: #0f172a;
+    border: none;
+    border-radius: 8px;
+    padding: 11px 16px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+}
+
 @media (max-width: 600px) {
   .favorites-page__grid {
     grid-template-columns: 1fr;
@@ -127,6 +231,4 @@ onMounted(async () => {
     font-size: 2rem;
   }
 }
-
 </style>
-
