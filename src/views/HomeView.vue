@@ -2,19 +2,9 @@
 import { ref, onMounted } from 'vue'
 import Hero from '../components/herosection/hero.vue'
 import Tarjetaspersonajes from '@/components/cards/tarjetaspersonajes.vue'
-import { ref, onMounted, computed } from 'vue'
 
 const personajes = ref([])
-const paginaActual = ref(1)
-const personajesPorPagina = 5
-const personajesPaginados = computed(() => {
-  const inicio = (paginaActual.value - 1) * personajesPorPagina
 
-  return personajes.value.slice(
-    inicio,
-    inicio + personajesPorPagina
-  )
-})
 onMounted(async () => {
   const response = await fetch('https://api.disneyapi.dev/character')
   const data = await response.json()
