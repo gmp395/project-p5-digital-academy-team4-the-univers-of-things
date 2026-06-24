@@ -1,14 +1,16 @@
 <template>
   <aside
-    class="fixed left-0 top-0 h-full w-64 bg-surface-light border-r glass-stroke flex flex-col py-8 z-50 hidden md:flex"
-  >
-    <!-- Título -->
+    class="fixed left-0 top-0 h-full w-64 bg-surface-light border-r glass-stroke flex flex-col py-8 z-50 hidden md:flex">
     <div class="px-6 mb-10">
-  <h1 class="font-bold text-2xl text-on-surface tracking-tight">CineMagic</h1>
+      <div class="px-6 mb-4 mt-6 flex justify-center">
+  <span class="material-symbols-outlined !text-6xl text-primary">
+    movie_filter
+  </span>
+</div>
 </div>
  
     <!-- Navegación -->
-    <nav class="flex-1 space-y-2">
+    <nav class="flex-1 space-y-0.5">
 
   <RouterLink
     to="/"
