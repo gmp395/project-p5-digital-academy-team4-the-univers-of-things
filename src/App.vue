@@ -2,14 +2,12 @@
 import { computed } from 'vue'
 import { RouterView, useRoute } from 'vue-router'
 import HeaderPublic from '@/components/layout/HeaderPublic.vue'
-import Footer from './components/Footer.vue'
 
 const route = useRoute()
 
-// Esta propiedad computada verifica toda la jerarquía de la ruta
-const shouldHideHeader = computed(() => {
-  return route.matched.some(record => record.meta.hideHeader)
-})
+// Ocultamos elementos globales si la ruta tiene meta: { hideHeader: true, hideFooter: true }
+const shouldHideHeader = computed(() => route.matched.some(record => record.meta.hideHeader))
+const shouldHideFooter = computed(() => route.matched.some(record => record.meta.hideFooter))
 </script>
 
 <template>
@@ -20,6 +18,6 @@ const shouldHideHeader = computed(() => {
       <RouterView />
     </main>
 
-    <Footer /> 
+    <Footer v-if="!shouldHideFooter" /> 
   </div>
 </template>
