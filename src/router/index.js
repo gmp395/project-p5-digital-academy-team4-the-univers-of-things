@@ -32,7 +32,35 @@ const router = createRouter({
         role: 'admin',
         hideHeader: true
       }
+    },
+
+    {
+      path: '/user',
+      name: 'user-dashboard',
+      component: () => import('../views/UserDashboardView.vue'),
+      meta: {
+        requiresAuth: true,
+        hideHeader: true
+      }
+    },
+   {
+  path: '/user/favorites',
+  name: 'favorites',
+  component: () => import('../views/FavoritesView.vue'),
+  meta: {
+    requiresAuth: true,
+    hideHeader: true
+      }
+    }, 
+    {
+  path: '/user/settings',
+  name: 'user-settings',
+  component: () => import('../views/UserSettingsView.vue'),
+  meta: {
+    requiresAuth: true,
+    hideHeader: true
     }
+   },
   ]
 })
 

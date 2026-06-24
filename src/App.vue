@@ -7,14 +7,10 @@ const route = useRoute()
 </script>
 
 <template>
-  <div class="app">
-    <main class="app__content">
+  <div class="app" :class="{ 'app--public': !route.meta.hideHeader }">
+    <HeaderPublic v-if="!route.meta.hideHeader" />
 
-      <HeaderPublic v-if="!route.meta.hideHeader" />
-
-      <RouterView />
-
-    </main>
+    <RouterView />
 
     <Footer v-if="!route.meta.hideHeader" />
   </div>
@@ -23,11 +19,6 @@ const route = useRoute()
 <style scoped lang="scss">
 .app {
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
 }
 
-.app__content {
-  flex: 1;
-}
 </style>

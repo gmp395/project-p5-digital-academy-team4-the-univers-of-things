@@ -15,46 +15,47 @@
     </p>
 
     <button type="submit" class="login-btn" :disabled="loading">
-      {{ loading ? 'Logging in...' : 'Log In →' }}
+      {{ loading ? "Logging in..." : "Log In →" }}
     </button>
   </form>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { useAuthStore } from '../stores/authStore'
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { useAuthStore } from "../stores/authStore";
 
-const email = ref('')
-const password = ref('')
-const errorMessage = ref('')
-const loading = ref(false)
+const email = ref("");
+const password = ref("");
+const errorMessage = ref("");
+const loading = ref(false);
 
-const router = useRouter()
-const authStore = useAuthStore()
+const router = useRouter();
+const authStore = useAuthStore();
 
 const handleLogin = async () => {
-  errorMessage.value = ''
-  loading.value = true
+  errorMessage.value = "";
+  loading.value = true;
 
   try {
-    const success = await authStore.login(
-      email.value,
-      password.value
-    )
+    const success = await authStore.login(email.value, password.value);
 
-    console.log('success:', success)
+    console.log("success:", success);
 
     if (success) {
-      await router.push('/admin')
+      if (authStore.user.role === "admin") {
+        await router.push("/admin");
+      } else {
+        await router.push("/user");
+      }
     } else {
-      errorMessage.value = 'Invalid email or password'
+      errorMessage.value = "Invalid email or password";
     }
   } catch (error) {
-    console.error(error)
-    errorMessage.value = 'Error al iniciar sesión'
+    console.error(error);
+    errorMessage.value = "Error al iniciar sesión";
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 </script>

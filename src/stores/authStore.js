@@ -3,7 +3,7 @@ import { authService } from '../services/authService'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    user: null,
+    user: JSON.parse(localStorage.getItem('user')),
     token: localStorage.getItem('token'),
     isAuthenticated: !!localStorage.getItem('token')
   }),
@@ -19,7 +19,7 @@ export const useAuthStore = defineStore('auth', {
 
         // Guardar token para mantener la sesión
         localStorage.setItem('token', result.token)
-
+        localStorage.setItem('user', JSON.stringify(result.user))
         return true
       }
 
@@ -36,18 +36,21 @@ export const useAuthStore = defineStore('auth', {
       this.isAuthenticated = false
 
       localStorage.removeItem('token')
+      localStorage.removeItem('user')
     },
 
-    initAuth() {
-      const token = localStorage.getItem('token')
+  initAuth() {
+  const token = localStorage.getItem('token')
 
-      if (token) {
-        this.token = token
-        this.isAuthenticated = true
-      } else {
-        this.token = null
-        this.isAuthenticated = false
-      }
-    }
+  if (token) {
+    this.token = token
+    this.user = JSON.parse(localStorage.getItem('user'))
+    this.isAuthenticated = true
+  } else {
+    this.user = null
+    this.token = null
+    this.isAuthenticated = false
   }
+}
+},
 })
