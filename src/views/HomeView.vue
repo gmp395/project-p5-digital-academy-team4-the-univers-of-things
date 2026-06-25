@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted, computed } from 'vue'
 import { useCharactersStore } from '@/stores/charactersStore'
 
 import Hero from '../components/herosection/hero.vue'
@@ -8,6 +8,15 @@ import BarraBusqueda from '@/components/BarraBusqueda/barraBusqueda.vue'
 import TopRatedCharacters from '@/components/TopRatedCharacters/topRatedCharacters.vue'
 
 const charactersStore = useCharactersStore()
+const filteredCharacters = computed(() => {
+  return charactersStore.characters
+    .filter((personaje) =>
+      personaje.name
+        .toLowerCase()
+        .includes(charactersStore.search.toLowerCase())
+    )
+    .slice(0, 10)
+})
 
 onMounted(() => {
   charactersStore.fetchCharacters()
@@ -28,7 +37,7 @@ onMounted(() => {
 
     <section class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
       <Tarjetaspersonajes
-v-for="personaje in charactersStore.characters.slice(0, 10)"        :key="personaje._id"
+      v-for="personaje in filteredCharacters"
         :personaje="personaje"
       />
     </section>
