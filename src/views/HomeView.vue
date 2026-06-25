@@ -1,19 +1,16 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { onMounted } from 'vue'
+import { useCharactersStore } from '@/stores/charactersStore'
+
 import Hero from '../components/herosection/hero.vue'
 import Tarjetaspersonajes from '@/components/cards/tarjetaspersonajes.vue'
 import BarraBusqueda from '@/components/BarraBusqueda/barraBusqueda.vue'
 import TopRatedCharacters from '@/components/TopRatedCharacters/topRatedCharacters.vue'
 
-const personajes = ref([])
+const charactersStore = useCharactersStore()
 
-onMounted(async () => {
-  const response = await fetch('https://api.disneyapi.dev/character')
-  const data = await response.json()
-
-  personajes.value = data.data
-    .filter(personaje => personaje.imageUrl)
-    .slice(0, 10)
+onMounted(() => {
+  charactersStore.fetchCharacters()
 })
 </script>
 
@@ -31,8 +28,7 @@ onMounted(async () => {
 
     <section class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
       <Tarjetaspersonajes
-        v-for="personaje in personajes"
-        :key="personaje._id"
+v-for="personaje in charactersStore.characters.slice(0, 10)"        :key="personaje._id"
         :personaje="personaje"
       />
     </section>
