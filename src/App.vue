@@ -1,17 +1,22 @@
 <script setup>
-import { RouterView } from 'vue-router'
+import { RouterView, useRoute } from 'vue-router'
 import HeaderPublic from '@/components/layout/HeaderPublic.vue'
 import Footer from './components/Footer.vue'
+
+const route = useRoute()
 </script>
 
 <template>
   <div class="app">
     <main class="app__content">
-      <HeaderPublic />
+
+      <HeaderPublic v-if="!route.meta.hideHeader" />
+
       <RouterView />
+
     </main>
 
-    <Footer />
+    <Footer v-if="!route.meta.hideHeader" />
   </div>
 </template>
 
