@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import Hero from '../components/herosection/hero.vue'
 import Tarjetaspersonajes from '@/components/cards/tarjetaspersonajes.vue'
+import BarraBusqueda from '@/components/BarraBusqueda/barraBusqueda.vue'
 import TopRatedCharacters from '@/components/TopRatedCharacters/topRatedCharacters.vue'
 
 const personajes = ref([])
@@ -22,6 +23,7 @@ onMounted(async () => {
    <Hero />
 
 <TopRatedCharacters />
+<BarraBusqueda />
 
     <h1 class="mb-8 text-3xl font-bold text-white">
       Disney Characters
