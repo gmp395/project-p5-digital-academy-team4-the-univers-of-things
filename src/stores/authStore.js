@@ -20,6 +20,9 @@ export const useAuthStore = defineStore('auth', {
         // Guardar token para mantener la sesión
         localStorage.setItem('token', result.token)
         localStorage.setItem('user', JSON.stringify(result.user))
+        if (result.user.role === 'admin') {
+  localStorage.setItem('admin', JSON.stringify(result.user))
+}
         return true
       }
 
