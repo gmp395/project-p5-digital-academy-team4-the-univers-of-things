@@ -25,13 +25,29 @@ onMounted(() => {
     <h2 class="mb-6 text-2xl font-bold text-white">
       ⭐ Top Rated by Users
     </h2>
-    <ul>
-  <li
-    v-for="character in topRatedCharacters"
-    :key="character._id"
-  >
-    {{ character.name }}
-  </li>
-</ul>
+
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5">
+      <article
+        v-for="character in topRatedCharacters"
+        :key="character._id"
+        class="overflow-hidden rounded-2xl bg-slate-800 shadow-lg"
+      >
+        <img
+          :src="character.imageUrl"
+          :alt="character.name"
+          class="h-72 w-full object-cover"
+        />
+
+        <div class="p-4">
+          <h3 class="text-lg font-bold text-white">
+            {{ character.name }}
+          </h3>
+
+          <p class="mt-2 text-yellow-400">
+            ⭐ 4.8
+          </p>
+        </div>
+      </article>
+    </div>
   </section>
 </template>

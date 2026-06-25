@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import Hero from '../components/herosection/hero.vue'
 import Tarjetaspersonajes from '@/components/cards/tarjetaspersonajes.vue'
-import TopRatedCharacters from '@/components/TopRatedCharacters.vue'
+import TopRatedCharacters from '@/components/TopRatedCharacters/topRatedCharacters.vue'
 
 const personajes = ref([])
 
