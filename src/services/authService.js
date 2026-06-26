@@ -1,6 +1,6 @@
 export const authService = {
   login(email, password) {
-    if (email === 'test@test.com' && password === '123456') {
+    if (email === 'admin@cinemagic.com' && password === '123456') {
       return {
         success: true,
         token: 'fake-admin-token',
