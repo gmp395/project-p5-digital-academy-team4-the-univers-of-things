@@ -8,7 +8,7 @@ describe('authService.login', () => {
   })
 
   it('should login hardcoded admin user', () => {
-    const result = authService.login('test@test.com', '123456')
+    const result = authService.login('admin@cinemagic.com', '123456')
     expect(result.success).toBe(true)
     expect(result.user.role).toBe('admin')
   })
