@@ -61,6 +61,11 @@ const router = createRouter({
     hideHeader: true
     }
    },
+   {
+  path: '/character/:id',
+  name: 'character-detail',
+  component: () => import('../views/CharacterDetailView.vue')
+},
   ]
 })
 
