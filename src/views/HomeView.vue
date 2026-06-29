@@ -36,10 +36,11 @@ onMounted(() => {
     </h1>
 
     <section class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
-      <Tarjetaspersonajes
-      v-for="personaje in filteredCharacters"
-        :personaje="personaje"
-      />
+   <Tarjetaspersonajes
+  v-for="personaje in filteredCharacters"
+  :key="personaje._id"
+  :personaje="personaje"
+/>
     </section>
 
   </main>

@@ -1,7 +1,7 @@
 <template>
   <RouterLink
     :to="`/character/${personaje._id}`"
-    class="block"
+    class="block cursor-pointer"
   >
     <article class="overflow-hidden rounded-2xl bg-slate-900 shadow-lg transition hover:-translate-y-1 hover:shadow-2xl">
       <img
@@ -20,6 +20,8 @@
 </template>
 
 <script setup>
+import { RouterLink } from 'vue-router'
+
 defineProps({
   personaje: {
     type: Object,
