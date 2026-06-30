@@ -2,10 +2,14 @@ import { defineStore } from 'pinia'
 
 export const useFavoritesStore = defineStore('favorites', {
   state: () => ({
-    favorites: []
+    favorites: JSON.parse(localStorage.getItem('favorites')) || []
   }),
 
   actions: {
+    saveFavorites() {
+      localStorage.setItem('favorites', JSON.stringify(this.favorites))
+    },
+
     addFavorite(item) {
       const exists = this.favorites.some((favorite) => favorite._id === item._id)
 
@@ -16,11 +20,14 @@ export const useFavoritesStore = defineStore('favorites', {
           customDescription: 'Personaje del universo Disney.',
           rating: 0
         })
+
+        this.saveFavorites()
       }
     },
 
     removeFavorite(id) {
       this.favorites = this.favorites.filter((favorite) => favorite._id !== id)
+      this.saveFavorites()
     },
 
     updateFavorite(id, updatedData) {
@@ -28,6 +35,7 @@ export const useFavoritesStore = defineStore('favorites', {
 
       if (favorite) {
         Object.assign(favorite, updatedData)
+        this.saveFavorites()
       }
     },
 
@@ -36,6 +44,7 @@ export const useFavoritesStore = defineStore('favorites', {
 
       if (favorite) {
         favorite.rating = rating
+        this.saveFavorites()
       }
     }
   }
