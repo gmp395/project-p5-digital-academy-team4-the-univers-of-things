@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useFavoritesStore } from '@/stores/favoritesStore'
+import { RouterLink } from 'vue-router'
 
 const favoritesStore = useFavoritesStore()
 
@@ -29,27 +30,30 @@ const topRatedCharacters = computed(() => {
       v-else
       class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5"
     >
-      <article
+      <RouterLink
         v-for="character in topRatedCharacters"
         :key="character._id"
-        class="overflow-hidden rounded-2xl bg-slate-800 shadow-lg"
+        :to="`/character/${character._id}`"
+        class="block cursor-pointer"
       >
-        <img
-          :src="character.imageUrl"
-          :alt="character.name"
-          class="h-72 w-full object-cover"
-        >
+        <article class="overflow-hidden rounded-2xl bg-slate-800 shadow-lg transition hover:-translate-y-1 hover:shadow-2xl">
+          <img
+            :src="character.imageUrl"
+            :alt="character.name"
+            class="h-72 w-full object-cover"
+          >
 
-        <div class="p-4">
-          <h3 class="text-lg font-bold text-white">
-            {{ character.name }}
-          </h3>
+          <div class="p-4">
+            <h3 class="text-lg font-bold text-white">
+              {{ character.name }}
+            </h3>
 
-          <p class="mt-2 text-yellow-400">
-            ⭐ {{ character.rating }}
-          </p>
-        </div>
-      </article>
+            <p class="mt-2 text-yellow-400">
+              ⭐ {{ character.rating }}
+            </p>
+          </div>
+        </article>
+      </RouterLink>
     </div>
   </section>
 </template>
