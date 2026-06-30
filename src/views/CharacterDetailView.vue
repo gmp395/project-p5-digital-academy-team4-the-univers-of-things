@@ -3,16 +3,20 @@ import { ref, onMounted } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import { useFavoritesStore } from '@/stores/favoritesStore'
 import { useAuthStore } from '@/stores/authStore'
+import { useWeekCharacterStore } from '@/stores/weekCharacterStore'
 import Spinner from '@/components/Spinner.vue'
 import RatingStars from '@/components/RatingStars.vue'
+import ConfirmWeekCharacterModal from '@/components/herosection/ConfirmWeekCharacterModal.vue'
 
 const route = useRoute()
 const character = ref(null)
 const loading = ref(true)
 const error = ref(false)
+const showConfirmModal = ref(false)
 
 const favoritesStore = useFavoritesStore()
 const authStore = useAuthStore()
+const weekCharacterStore = useWeekCharacterStore()
 
 onMounted(async () => {
   try {
@@ -27,6 +31,11 @@ onMounted(async () => {
     loading.value = false
   }
 })
+
+const confirmWeekCharacter = () => {
+  weekCharacterStore.setWeekCharacter(character.value)
+  showConfirmModal.value = false
+}
 </script>
 
 <template>
@@ -75,6 +84,18 @@ onMounted(async () => {
         <RatingStars :character="character" />
       </div>
 
+      <div
+        v-if="authStore.user?.role === 'admin'"
+        class="mb-6 flex justify-center"
+      >
+        <button
+          @click="showConfirmModal = true"
+          class="rounded-lg bg-yellow-500 px-5 py-2 font-semibold text-slate-950 hover:bg-yellow-400"
+        >
+          👑 Elegir como personaje de la semana
+        </button>
+      </div>
+
       <p v-if="character.films?.length" class="mb-3">
         <strong>Películas:</strong> {{ character.films.join(', ') }}
       </p>
@@ -83,5 +104,12 @@ onMounted(async () => {
         <strong>Series:</strong> {{ character.tvShows.join(', ') }}
       </p>
     </section>
+
+    <ConfirmWeekCharacterModal
+      v-if="showConfirmModal && character"
+      :character="character"
+      @close="showConfirmModal = false"
+      @confirm="confirmWeekCharacter"
+    />
   </main>
 </template>
