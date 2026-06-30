@@ -1,8 +1,9 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import Tarjetaspersonajes from '@/components/cards/tarjetaspersonajes.vue'
-
+import { authService } from '@/services/authService'
 const personajes = ref([])
+const adminInfo = ref(null)
 
 onMounted(async () => {
   const response = await fetch('https://api.disneyapi.dev/character')
@@ -11,6 +12,8 @@ onMounted(async () => {
   personajes.value = data.data
     .filter(personaje => personaje.imageUrl)
     .slice(0, 10)
+    
+    adminInfo.value = authService.getAdminPublicInfo()
 })
 </script>
 
