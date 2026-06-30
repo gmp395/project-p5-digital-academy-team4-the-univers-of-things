@@ -4,8 +4,6 @@ import { RouterView, useRoute } from 'vue-router'
 import HeaderPublic from '@/components/layout/HeaderPublic.vue'
 
 const route = useRoute()
-
-// Ocultamos elementos globales si la ruta tiene meta: { hideHeader: true, hideFooter: true }
 const shouldHideHeader = computed(() => route.matched.some(record => record.meta.hideHeader))
 const shouldHideFooter = computed(() => route.matched.some(record => record.meta.hideFooter))
 </script>
