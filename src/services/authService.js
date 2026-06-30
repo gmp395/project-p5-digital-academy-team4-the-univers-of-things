@@ -17,22 +17,7 @@ function seedAdminUser() {
 seedAdminUser()
 export const authService = {
   login(email, password) {
-    if (email === 'admin@cinemagic.com' && password === '123456') {
-      return {
-        success: true,
-        token: 'fake-admin-token',
-        user: { email, role: 'admin' },
-      }
-    }
-
-    if (email === 'user@test.com' && password === '123456') {
-      return {
-        success: true,
-        token: 'fake-customer-token',
-        user: { email, role: 'customer' },
-      }
-    }
-
+  
     const users = JSON.parse(localStorage.getItem('users') || '[]')
     const foundUser = users.find(
       (u) => u.email === email && u.password === password
