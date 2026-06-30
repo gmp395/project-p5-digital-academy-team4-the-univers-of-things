@@ -1,25 +1,32 @@
 <script setup>
-import { computed } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useRoute, RouterLink } from 'vue-router'
 import { useFavoritesStore } from '@/stores/favoritesStore'
 import { useAuthStore } from '@/stores/authStore'
+import Spinner from '@/components/Spinner.vue'
+import RatingStars from '@/components/RatingStars.vue'
 
-const props = defineProps({
-  character: {
-    type: Object,
-    required: true
-  }
-})
+const route = useRoute()
+const character = ref(null)
+const loading = ref(true)
+const error = ref(false)
 
 const favoritesStore = useFavoritesStore()
 const authStore = useAuthStore()
 
-const selectedRating = computed(() => {
-  return favoritesStore.getRating(props.character._id)
-})
+onMounted(async () => {
+  try {
+    const response = await fetch(`https://api.disneyapi.dev/character/${route.params.id}`)
+    const data = await response.json()
 
-const rateCharacter = (rating) => {
-  favoritesStore.rateCharacter(props.character, rating)
-}
+    character.value = data.data
+  } catch (err) {
+    console.error('Error al cargar el personaje:', err)
+    error.value = true
+  } finally {
+    loading.value = false
+  }
+})
 </script>
 
 <template>
@@ -31,8 +38,17 @@ const rateCharacter = (rating) => {
       Volver
     </RouterLink>
 
+    <Spinner v-if="loading" />
+
+    <p
+      v-else-if="error"
+      class="text-center text-red-400"
+    >
+      No se pudo cargar el personaje.
+    </p>
+
     <section
-      v-if="character"
+      v-else-if="character"
       class="mx-auto max-w-4xl rounded-2xl bg-slate-900 p-8 shadow-lg"
     >
       <img
@@ -44,14 +60,20 @@ const rateCharacter = (rating) => {
       <h1 class="mb-6 text-center text-4xl font-bold">
         {{ character.name }}
       </h1>
-      <button
-  v-if="authStore.user?.role === 'customer'"
-  @click="favoritesStore.addFavorite(character)"
-  class="mb-6 rounded-lg bg-red-600 px-5 py-2 font-semibold hover:bg-red-700"
->
-  ❤️ Añadir a favoritos
-</button>
 
+      <div
+        v-if="authStore.user?.role === 'customer'"
+        class="mb-6 flex justify-center gap-4"
+      >
+        <button
+          @click="favoritesStore.toggleFavorite(character)"
+          class="text-3xl transition hover:scale-110"
+        >
+          {{ favoritesStore.isFavorite(character._id) ? '❤️' : '🤍' }}
+        </button>
+
+        <RatingStars :character="character" />
+      </div>
 
       <p v-if="character.films?.length" class="mb-3">
         <strong>Películas:</strong> {{ character.films.join(', ') }}
