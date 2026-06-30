@@ -61,4 +61,16 @@ export const authService = {
       message: 'Cuenta creada correctamente.',
     }
   },
+getAdminPublicInfo() {
+    const users = JSON.parse(localStorage.getItem('users') || '[]')
+    const admin = users.find((u) => u.role === 'admin')
+
+    if (!admin) return null
+
+    return {
+      name: admin.name,
+      email: admin.email,
+      role: admin.role,
+    }
+  },
 }
