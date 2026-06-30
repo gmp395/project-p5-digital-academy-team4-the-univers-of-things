@@ -3,10 +3,14 @@ import { authService } from '../services/authService'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    user: null,
-    token: localStorage.getItem('token'),
-    isAuthenticated: !!localStorage.getItem('token')
+    user: JSON.parse(localStorage.getItem('user')) || null,
+    token: localStorage.getItem('token') || null,
   }),
+
+  getters: {
+    isAuthenticated: (state) => !!state.user && !!state.token,
+    userRole: (state) => state.user?.role || 'guest'
+  },
 
   actions: {
     async login(email, password) {
@@ -15,38 +19,31 @@ export const useAuthStore = defineStore('auth', {
       if (result.success) {
         this.user = result.user
         this.token = result.token
-        this.isAuthenticated = true
 
-        // Guardar token para mantener la sesión
         localStorage.setItem('token', result.token)
-
+        localStorage.setItem('user', JSON.stringify(result.user))
         return true
       }
 
-      this.user = null
-      this.token = null
-      this.isAuthenticated = false
-
+      this.logout()
       return false
     },
 
     logout() {
       this.user = null
       this.token = null
-      this.isAuthenticated = false
-
       localStorage.removeItem('token')
+      localStorage.removeItem('user')
     },
+
     initAuth() {
       const token = localStorage.getItem('token')
+      const user = JSON.parse(localStorage.getItem('user'))
 
-      if (token) {
+      if (token && user) {
         this.token = token
-        this.isAuthenticated = true
-      } else {
-        this.token = null
-        this.isAuthenticated = false
+        this.user = user
       }
     }
-  }
+  },
 })

@@ -1,15 +1,20 @@
 export const authService = {
-  login(email, password) {
-    if (email === "test@test.com" && password === "123456") {
+  async login(email, password) {
+    if (email === 'test@test.com' && password === '123456') {
       return {
         success: true,
-        token: "fake-jwt-token",
-        user: { email }
+        token: 'fake-jwt-token',
+        user: {
+        email,
+        role: 'admin',
+        name: 'Administrator'
+      }
       }
     }
+
     return {
       success: false,
-      message: "Invalid email or password." 
+      message: 'Invalid email or password.'
     }
   }
 }

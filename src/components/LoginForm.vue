@@ -43,10 +43,8 @@ const handleLogin = async () => {
       password.value
     )
 
-    console.log('success:', success)
-
     if (success) {
-      await router.push('/admin')
+      await router.push({ name: 'user-dashboard' })
     } else {
       errorMessage.value = 'Invalid email or password'
     }
