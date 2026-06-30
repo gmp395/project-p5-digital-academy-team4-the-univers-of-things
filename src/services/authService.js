@@ -1,3 +1,20 @@
+const ADMIN_EMAIL = 'admin@cinemagic.com'
+
+function seedAdminUser() {
+  const users = JSON.parse(localStorage.getItem('users') || '[]')
+  const adminExists = users.some((u) => u.email === ADMIN_EMAIL)
+
+  if (!adminExists) {
+    users.push({
+      name: 'Administrator',
+      email: ADMIN_EMAIL,
+      password: '123456',
+      role: 'admin',
+    })
+    localStorage.setItem('users', JSON.stringify(users))
+  }
+}
+seedAdminUser()
 export const authService = {
   login(email, password) {
     if (email === 'admin@cinemagic.com' && password === '123456') {
