@@ -1,5 +1,5 @@
 <template>
-  <div class="user-directory -mt-10 px-6">
+  <div class="user-directory px-6">
     <h1 class="text-3xl font-bold text-on-surface mb-8">Ajustes de usuario</h1>
 
     <!-- Avatar -->

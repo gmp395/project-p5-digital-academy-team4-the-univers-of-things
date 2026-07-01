@@ -9,10 +9,10 @@ const featuredStore = useFeaturedStore()
 </script>
 
 <template>
-  <div class="featured-management -mt-10 px-6">
+  <div class="featured-management px-6">
 
     <div class="mb-10">
-      <h1 class="mb-2 text-3xl font-bold text-white">
+      <h1 class="mb-2 text-3xl font-bold text-on-surface">
         Resumen del panel
       </h1>
 
