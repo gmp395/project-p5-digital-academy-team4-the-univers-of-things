@@ -1,21 +1,16 @@
 <template>
-  <div class="user-directory px-6">
-    <h1 class="text-3xl font-bold text-on-surface mb-8">Ajustes de usuario</h1>
+  <div class="admin-settings">
+    <h1 class="admin-settings__title">Ajustes de usuario</h1>
 
     <!-- Avatar -->
     <div class="bg-surface-container border glass-stroke rounded-2xl p-6 mb-6">
       <h2 class="font-semibold text-xl text-on-surface mb-1">Avatar de perfil</h2>
       <p class="text-on-surface-variant text-sm mb-4">Elige un personaje Disney o sube una foto desde tu equipo.</p>
 
-      <!-- Preview -->
       <div class="flex items-center gap-4 mb-4">
-        <img :src="previewAvatar" alt="Avatar"
-          class="w-16 h-16 rounded-full border-2 border-surface-variant object-cover shrink-0"
-        />
+        <img :src="previewAvatar" alt="Avatar" class="w-16 h-16 rounded-full border-2 border-surface-variant object-cover shrink-0" />
         <div>
-          <p class="text-sm text-on-surface font-medium">
-            {{ uploadFileName || selectedCharacter?.name || 'Sin seleccionar' }}
-          </p>
+          <p class="text-sm text-on-surface font-medium">{{ uploadFileName || selectedCharacter?.name || 'Sin seleccionar' }}</p>
           <p class="text-xs text-on-surface-variant">Avatar actual del administrador</p>
         </div>
         <button
@@ -27,20 +22,10 @@
         </button>
       </div>
 
-      <!-- Buscador -->
-      <input
-        v-model="query"
-        type="text"
-        placeholder="Buscar personaje (ej: Mickey)"
-        class="w-full bg-surface-container-high rounded-lg px-4 py-2 text-on-surface mb-3"
-      />
-
+      <input v-model="query" type="text" placeholder="Buscar personaje (ej: Mickey)" class="w-full bg-surface-container-high rounded-lg px-4 py-2 text-on-surface mb-3" />
       <p v-if="loading" class="text-on-surface-variant text-sm mb-2">Cargando personajes...</p>
-      <p v-if="!query.trim() && !loading" class="text-on-surface-variant text-sm mb-2">
-        Escribe un nombre para buscar.
-      </p>
+      <p v-if="!query.trim() && !loading" class="text-on-surface-variant text-sm mb-2">Escribe un nombre para buscar.</p>
 
-      <!-- Resultados en scroll horizontal -->
       <div class="flex gap-3 overflow-x-auto pb-2 mb-4">
         <div
           v-for="character in filteredCharacters"
@@ -48,21 +33,14 @@
           @click="selectCharacter(character)"
           :class="[
             'shrink-0 w-20 bg-surface-container-high rounded-xl p-1.5 text-center cursor-pointer border-2 transition',
-            selectedCharacter?._id === character._id
-              ? 'border-primary'
-              : 'border-transparent hover:border-surface-variant'
+            selectedCharacter?._id === character._id ? 'border-primary' : 'border-transparent hover:border-surface-variant'
           ]"
         >
-          <img
-            :src="character.imageUrl"
-            :alt="character.name"
-            class="w-full h-14 object-cover rounded-lg mb-1"
-          />
+          <img :src="character.imageUrl" :alt="character.name" class="w-full h-14 object-cover rounded-lg mb-1" />
           <p class="text-xs text-on-surface leading-tight truncate">{{ character.name }}</p>
         </div>
       </div>
 
-      <!-- Subir desde el equipo -->
       <div class="border-t glass-stroke pt-4">
         <p class="text-xs text-on-surface-variant mb-2">O sube una foto desde tu equipo:</p>
         <label class="inline-flex items-center gap-2 bg-surface-container-high rounded px-3 py-1.5 cursor-pointer text-on-surface text-xs hover:bg-surface-container transition-colors">
@@ -70,7 +48,7 @@
           Subir imagen
           <input type="file" accept="image/*" @change="handleFileUpload" class="hidden" />
         </label>
-        <p v-if="uploadFileName" class="text-xs text-white  mt-2">Lista: {{ uploadFileName }}</p>
+        <p v-if="uploadFileName" class="text-xs text-white mt-2">Lista: {{ uploadFileName }}</p>
       </div>
 
       <p v-if="avatarSaved" class="text-sm font-bold text-white mt-3">✓ Avatar actualizado correctamente.</p>
@@ -83,32 +61,17 @@
       <div class="space-y-4">
         <div>
           <label class="block text-sm text-on-surface-variant mb-2">Contraseña actual</label>
-          <input
-            v-model="currentPassword"
-            type="password"
-            placeholder="Introduce tu contraseña actual"
-            class="w-full bg-surface-container-high border glass-stroke rounded-lg p-3 text-on-surface focus:ring-1 focus:ring-primary outline-none"
-          />
+          <input v-model="currentPassword" type="password" placeholder="Introduce tu contraseña actual" class="w-full bg-surface-container-high border glass-stroke rounded-lg p-3 text-on-surface focus:ring-1 focus:ring-primary outline-none" />
         </div>
 
         <div class="grid grid-cols-2 gap-4">
           <div>
             <label class="block text-sm text-on-surface-variant mb-2">Nueva contraseña</label>
-            <input
-              v-model="newPassword"
-              type="password"
-              placeholder="Nueva contraseña"
-              class="w-full bg-surface-container-high border glass-stroke rounded-lg p-3 text-on-surface focus:ring-1 focus:ring-primary outline-none"
-            />
+            <input v-model="newPassword" type="password" placeholder="Nueva contraseña" class="w-full bg-surface-container-high border glass-stroke rounded-lg p-3 text-on-surface focus:ring-1 focus:ring-primary outline-none" />
           </div>
           <div>
             <label class="block text-sm text-on-surface-variant mb-2">Confirmar contraseña</label>
-            <input
-              v-model="confirmPassword"
-              type="password"
-              placeholder="Confirma la contraseña"
-              class="w-full bg-surface-container-high border glass-stroke rounded-lg p-3 text-on-surface focus:ring-1 focus:ring-primary outline-none"
-            />
+            <input v-model="confirmPassword" type="password" placeholder="Confirma la contraseña" class="w-full bg-surface-container-high border glass-stroke rounded-lg p-3 text-on-surface focus:ring-1 focus:ring-primary outline-none" />
           </div>
         </div>
 
@@ -116,10 +79,7 @@
         <p v-if="passwordSuccess" class="text-sm text-green-400">✓ Contraseña actualizada correctamente.</p>
 
         <div class="flex justify-end pt-2">
-          <button
-            @click="updatePassword"
-            class="bg-primary text-white font-semibold px-6 py-2.5 rounded-lg hover:opacity-90 transition"
-          >
+          <button @click="updatePassword" class="bg-primary text-white font-semibold px-6 py-2.5 rounded-lg hover:opacity-90 transition">
             Actualizar contraseña
           </button>
         </div>
@@ -181,9 +141,7 @@ function handleFileUpload(event) {
   uploadFileName.value = file.name
   selectedCharacter.value = null
   const reader = new FileReader()
-  reader.onload = (e) => {
-    uploadedAvatar.value = e.target.result
-  }
+  reader.onload = (e) => { uploadedAvatar.value = e.target.result }
   reader.readAsDataURL(file)
 }
 
@@ -223,17 +181,24 @@ function updatePassword() {
     return
   }
 
-  const storedCustom = localStorage.getItem('adminCustomPassword')
-  const validCurrent = storedCustom
-    ? currentPassword.value === storedCustom
-    : currentPassword.value === import.meta.env.VITE_ADMIN_PASSWORD
+  const userEmail = authStore.user?.email
+  const users = JSON.parse(localStorage.getItem('users') || '[]')
+  const user = users.find(u => u.email === userEmail)
 
-  if (!validCurrent) {
+  if (!user) {
+    passwordError.value = 'Usuario no encontrado.'
+    return
+  }
+
+  if (user.password !== currentPassword.value) {
     passwordError.value = 'La contraseña actual es incorrecta.'
     return
   }
 
-  localStorage.setItem('adminCustomPassword', newPassword.value)
+  user.password = newPassword.value
+  localStorage.setItem('users', JSON.stringify(users))
+  adminStore.refreshUsers()
+
   currentPassword.value = ''
   newPassword.value = ''
   confirmPassword.value = ''
@@ -243,3 +208,16 @@ function updatePassword() {
 
 onMounted(loadCharacters)
 </script>
+
+<style scoped lang="scss">
+.admin-settings {
+  padding: 40px 48px 24px;
+
+  &__title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: #e2e8f0;
+    margin-bottom: 32px;
+  }
+}
+</style>

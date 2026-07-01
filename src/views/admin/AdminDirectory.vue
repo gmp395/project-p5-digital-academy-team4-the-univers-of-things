@@ -1,7 +1,7 @@
 <template>
-  <div class="user-directory px-6">
+  <div class="admin-directory">
 
-    <h1 class="text-3xl font-bold text-on-surface mb-8">Directorio de usuarios</h1>
+    <h1 class="admin-directory__title">Directorio de usuarios</h1>
 
     <div class="table-container bg-surface-container border glass-stroke rounded-2xl overflow-hidden shadow-sm">
       <div class="overflow-x-auto">
@@ -25,7 +25,7 @@
               <td class="px-6 py-4 font-body-sm text-on-surface-variant">{{ user.email }}</td>
               <td class="px-6 py-4 text-center">
                 <button
-                  @click="() => { console.log('email:', user.email, 'status:', user.status); adminStore.toggleUserStatus(user.email) }"
+                  @click="adminStore.toggleUserStatus(user.email)"
                   :class="[
                     'w-14 h-7 flex items-center rounded-full p-1 transition-all duration-300 border glass-stroke',
                     user.status === 'allowed' ? 'bg-primary' : 'bg-surface-variant'
@@ -58,5 +58,15 @@ onMounted(() => {
 })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+.admin-directory {
+  padding: 40px 48px 24px;
+
+  &__title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: #e2e8f0;
+    margin-bottom: 32px;
+  }
+}
 </style>

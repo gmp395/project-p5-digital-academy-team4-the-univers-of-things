@@ -1,3 +1,55 @@
+<template>
+  <div class="admin-dashboard">
+
+    <div class="admin-dashboard__header">
+      <h1 class="admin-dashboard__title">Resumen del panel</h1>
+      <p class="admin-dashboard__welcome">
+        Bienvenido, <span>{{ authStore.user?.name }}</span> 👋
+      </p>
+      <p class="admin-dashboard__subtitle">
+        Gestiona usuarios y personajes destacados desde un mismo lugar.
+      </p>
+    </div>
+
+    <div class="admin-dashboard__stats">
+      <div class="admin-dashboard__stat-card">
+        <div class="admin-dashboard__stat-header">
+          <h2>Total de usuarios</h2>
+          <span class="material-symbols-outlined admin-dashboard__stat-icon--blue">group</span>
+        </div>
+        <p class="admin-dashboard__stat-number">{{ adminStore.totalUsers }}</p>
+        <p class="admin-dashboard__stat-label">Usuarios registrados</p>
+      </div>
+
+      <div class="admin-dashboard__stat-card">
+        <div class="admin-dashboard__stat-header">
+          <h2>Personajes destacados</h2>
+          <span class="material-symbols-outlined admin-dashboard__stat-icon--yellow">stars</span>
+        </div>
+        <p class="admin-dashboard__stat-number">{{ featuredStore.totalFeatured }}</p>
+        <p class="admin-dashboard__stat-label">Personajes resaltados</p>
+      </div>
+    </div>
+
+    <h2 class="admin-dashboard__actions-title">Acciones rápidas</h2>
+    <div class="admin-dashboard__actions">
+      <router-link :to="{ name: 'user-directory' }" class="admin-dashboard__action-btn admin-dashboard__action-btn--primary">
+        <span class="material-symbols-outlined">group</span>
+        Gestionar usuarios
+      </router-link>
+      <router-link :to="{ name: 'featured-management' }" class="admin-dashboard__action-btn admin-dashboard__action-btn--primary">
+        <span class="material-symbols-outlined">stars</span>
+        Personajes destacados
+      </router-link>
+      <router-link :to="{ name: 'admin-settings' }" class="admin-dashboard__action-btn admin-dashboard__action-btn--secondary">
+        <span class="material-symbols-outlined">settings</span>
+        Configuración
+      </router-link>
+    </div>
+
+  </div>
+</template>
+
 <script setup>
 import { useAdminStore } from '@/stores/adminStore'
 import { useAuthStore } from '@/stores/authStore'
@@ -8,83 +60,127 @@ const authStore = useAuthStore()
 const featuredStore = useFeaturedStore()
 </script>
 
-<template>
-  <div class="featured-management px-6">
+<style scoped lang="scss">
+.admin-dashboard {
+  flex: 1;
+  padding: 40px 48px 24px;
+  color: white;
+}
 
-    <div class="mb-10">
-      <h1 class="mb-2 text-3xl font-bold text-on-surface">
-        Resumen del panel
-      </h1>
+.admin-dashboard__header {
+  margin-bottom: 40px;
+}
 
-      <p class="text-slate-400">
-        Bienvenido, <span class="font-semibold text-white">{{ authStore.user?.name }}</span> 👋
-      </p>
+.admin-dashboard__title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #e2e8f0;
+  margin-bottom: 8px;
+}
 
-      <p class="mt-1 text-slate-500">
-        Gestiona usuarios y personajes destacados desde un mismo lugar.
-      </p>
-    </div>
+.admin-dashboard__welcome {
+  color: #94a3b8;
+  margin-bottom: 4px;
 
-    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 mb-10">
+  span {
+    font-weight: 600;
+    color: #ffffff;
+  }
+}
 
-      <div class="rounded-xl border border-slate-800 bg-slate-900 p-6 shadow-lg">
-        <div class="flex items-center justify-between">
-          <h2 class="text-slate-400">
-            Total de usuarios
-          </h2>
-          <span class="material-symbols-outlined text-3xl text-blue-400">group</span>
-        </div>
-        <p class="mt-4 text-4xl font-bold text-white">
-          {{ adminStore.totalUsers }}
-        </p>
-        <p class="mt-2 text-sm text-slate-500">
-          Usuarios registrados
-        </p>
-      </div>
+.admin-dashboard__subtitle {
+  color: #64748b;
+}
 
-      <div class="rounded-xl border border-slate-800 bg-slate-900 p-6 shadow-lg">
-        <div class="flex items-center justify-between">
-          <h2 class="text-slate-400">
-            Personajes destacados
-          </h2>
-          <span class="material-symbols-outlined text-3xl text-yellow-400">stars</span>
-        </div>
-        <p class="mt-4 text-4xl font-bold text-white">{{ featuredStore.totalFeatured }}</p>
-        <p class="mt-2 text-sm text-slate-500">
-          Personajes resaltados
-        </p>
-      </div>
+.admin-dashboard__stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin-bottom: 40px;
+}
 
-    </div>
+.admin-dashboard__stat-card {
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 
-    <h2 class="mb-5 text-xl font-semibold text-white">
-      Acciones rápidas
-    </h2>
-    <div class="flex flex-wrap gap-4">
-      <router-link
-        :to="{ name: 'user-directory' }"
-        class="flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-3 font-medium text-white transition hover:bg-blue-700"
-      >
-        <span class="material-symbols-outlined">group</span>
-        Gestionar usuarios
-      </router-link>
+  h2 {
+    color: #94a3b8;
+    font-size: 0.95rem;
+    font-weight: 400;
+  }
+}
 
-      <router-link
-        :to="{ name: 'featured-management' }"
-        class="flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-3 font-medium text-white transition hover:bg-blue-700"
-      >
-        <span class="material-symbols-outlined">stars</span>
-        Personajes destacados
-      </router-link>
+.admin-dashboard__stat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
 
-      <router-link
-        :to="{ name: 'admin-settings' }"
-        class="flex items-center gap-2 rounded-lg bg-slate-700 px-6 py-3 font-medium text-white transition hover:bg-slate-600"
-      >
-        <span class="material-symbols-outlined">settings</span>
-        Configuración
-      </router-link>
-    </div>
+.admin-dashboard__stat-icon--blue { color: #60a5fa; font-size: 1.875rem; }
+.admin-dashboard__stat-icon--yellow { color: #facc15; font-size: 1.875rem; }
 
-  </div>
-</template>
+.admin-dashboard__stat-number {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+
+.admin-dashboard__stat-label {
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.admin-dashboard__actions-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 20px;
+}
+
+.admin-dashboard__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.admin-dashboard__action-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 500;
+  color: #ffffff;
+  text-decoration: none;
+  transition: background 0.2s;
+
+  &--primary {
+    background: #2563eb;
+    &:hover { background: #1d4ed8; }
+  }
+
+  &--secondary {
+    background: #334155;
+    &:hover { background: #475569; }
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-dashboard {
+    padding: 40px 24px 24px;
+  }
+
+  .admin-dashboard__stats {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-dashboard__actions {
+    flex-direction: column;
+  }
+}
+</style>
