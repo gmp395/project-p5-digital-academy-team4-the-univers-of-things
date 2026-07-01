@@ -10,12 +10,11 @@ const router = createRouter({
     { path: '/', name: 'home', component: HomeView },
     { path: '/login', name: 'login', component: LoginView },
 
-    {
+   {
       path: '/admin',
       component: () => import('../views/admin/AdminLayout.vue'),
-      meta: { requiresAuth: true, hideHeader: true },
-      redirect: '/admin/user',   // 👈 CLAVE: siempre entra al dashboard
-
+      meta: { requiresAuth: true, hideHeader: true, hideFooter: true },
+      redirect: '/admin/user',
       children: [
         {
           path: 'user',
