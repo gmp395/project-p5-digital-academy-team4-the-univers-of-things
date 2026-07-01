@@ -1,63 +1,87 @@
 <template>
-  <aside class="user-sidebar">
-    <h2 class="user-sidebar__logo">CineMagic</h2>
+  <aside class="sticky top-0 h-screen w-64 bg-surface-light border-r glass-stroke flex flex-col py-4 z-50 shrink-0">
 
-    <nav class="user-sidebar__nav">
-    <RouterLink to="/">
-        <Home class="user-sidebar__icon" :size="18" />
-        Inicio
+    <div class="px-6 mb-2 mt-2 flex justify-center">
+      <span class="material-symbols-outlined text-primary" style="font-size: 40px;">movie_filter</span>
+    </div>
+
+    <nav class="flex-1 space-y-1">
+      <p class="px-6 pt-4 pb-2 text-xs text-on-surface-variant uppercase tracking-wider">Sistema</p>
+
+      <RouterLink
+        to="/"
+        class="flex items-center gap-4 px-6 py-3 transition-all duration-300 text-on-surface-variant hover:bg-surface-variant hover:text-on-surface"
+        active-class="bg-primary/10 text-primary border-l-4 border-primary"
+      >
+        <span class="material-symbols-outlined text-[20px]">home</span>
+        <span class="font-label-lg text-sm font-bold">Inicio</span>
       </RouterLink>
-      <RouterLink to="/user/favorites">
-        <Heart class="user-sidebar__icon" :size="18" />
-        Favoritos
+
+      <p class="px-6 pt-6 pb-2 text-xs text-on-surface-variant uppercase tracking-wider">Personal</p>
+
+      <RouterLink
+        to="/user"
+        class="flex items-center gap-4 px-6 py-3 transition-all duration-300 text-on-surface-variant hover:bg-surface-variant hover:text-on-surface"
+        active-class="bg-primary/10 text-primary border-l-4 border-primary"
+      >
+        <span class="material-symbols-outlined text-[20px]">person</span>
+        <span class="font-label-lg text-sm font-bold">Perfil</span>
       </RouterLink>
-      <RouterLink to="/user">
-        <User class="user-sidebar__icon" :size="18" />
-        Perfil
+
+      <RouterLink
+        to="/user/favorites"
+        class="flex items-center gap-4 px-6 py-3 transition-all duration-300 text-on-surface-variant hover:bg-surface-variant hover:text-on-surface"
+        active-class="bg-primary/10 text-primary border-l-4 border-primary"
+      >
+        <span class="material-symbols-outlined text-[20px]">favorite</span>
+        <span class="font-label-lg text-sm font-bold">Favoritos</span>
       </RouterLink>
-      <RouterLink to="/user/settings">
-        <Settings class="user-sidebar__icon" :size="18" />
-        Ajustes
+
+      <RouterLink
+        to="/user/settings"
+        class="flex items-center gap-4 px-6 py-3 transition-all duration-300 text-on-surface-variant hover:bg-surface-variant hover:text-on-surface"
+        active-class="bg-primary/10 text-primary border-l-4 border-primary"
+      >
+        <span class="material-symbols-outlined text-[20px]">settings</span>
+        <span class="font-label-lg text-sm font-bold">Ajustes</span>
       </RouterLink>
     </nav>
 
-    <div class="user-sidebar__profile">
-      <div class="user-sidebar__avatar">
-        <img
-          v-if="userAvatar"
-          :src="userAvatar"
-          alt="Avatar de usuario"
-        />
-        <span v-else>A</span>
+    <div class="px-6 pt-8 border-t glass-stroke mt-auto">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary/30 bg-surface-variant flex items-center justify-center">
+          <img v-if="userAvatar" :src="userAvatar" alt="Avatar" class="w-full h-full object-cover" />
+          <span v-else class="material-symbols-outlined text-on-surface-variant">person</span>
+        </div>
+        <div>
+          <p class="font-label-lg text-label-lg font-bold text-on-surface">{{ authStore.user?.name || 'Usuario' }}</p>
+          <p class="text-xs text-on-surface-variant">Miembro de CineMagic</p>
+        </div>
       </div>
 
-      <span>{{ authStore.user?.name || 'Usuario' }}</span>
+      <button
+        @click="logout"
+        class="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-surface-container-high text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all duration-300"
+      >
+        <span class="material-symbols-outlined">logout</span>
+        <span class="font-label-lg text-label-lg">Cerrar Sesión</span>
+      </button>
     </div>
-
-    <button class="user-sidebar__logout" @click="handleLogout">
-      Cerrar sesión
-    </button>
   </aside>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
-import { Home, Heart, User, Settings } from 'lucide-vue-next'
+import { useLogout } from '@/utils/useLogout'
 
-const router = useRouter()
 const authStore = useAuthStore()
+const { logout } = useLogout()
 
 const userAvatar = ref('')
 
 const loadUserAvatar = () => {
   userAvatar.value = localStorage.getItem('userAvatar') || ''
-}
-
-const handleLogout = () => {
-  authStore.logout()
-  router.push('/login')
 }
 
 onMounted(() => {
@@ -66,111 +90,3 @@ onMounted(() => {
   window.addEventListener('avatar-updated', loadUserAvatar)
 })
 </script>
-
-<style scoped lang="scss">
-.user-sidebar {
-  width: 210px;
-  height: 100vh;
-  position: sticky;
-  top: 0;
-  background-color: #172133;
-  color: white;
-  padding: 12px 16px 16px;
-  display: flex;
-  flex-direction: column;
-}
-
-.user-sidebar__logo {
-  margin-bottom: 28px;
-  font-size: 2rem;
-  font-weight: 700;
-}
-
-.user-sidebar__nav {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  a {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: #cbd5e1;
-    text-decoration: none;
-    padding: 10px 12px;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    &:hover,
-    &.router-link-active {
-      background-color: #253247;
-      color: #ffffff;
-    }
-  }
-}
-
-.user-sidebar__profile {
-  margin-top: auto;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #cbd5e1;
-  font-size: 0.85rem;
-  line-height: 1.2;
-}
-
-.user-sidebar__profile span {
-  white-space: nowrap;
-}
-
-.user-sidebar__avatar {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background: #475569;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
-  overflow: hidden;
-  flex-shrink: 0;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-}
-
-.user-sidebar__logout {
-  margin-top: 12px;
-  color: #cbd5e1;
-  background: transparent;
-  border: 1px solid #334155;
-  padding: 8px 10px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 0.95rem;
-
-  &:hover {
-    background-color: #253247;
-    color: #ffffff;
-  }
-}
-
-@media (max-width: 1000px) {
-  .user-sidebar {
-    width: 100%;
-    height: auto;
-    min-height: auto;
-    position: static;
-  }
-
-  .user-sidebar__nav {
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
-
-  .user-sidebar__profile {
-    margin-top: 16px;
-  }
-}
-</style>
