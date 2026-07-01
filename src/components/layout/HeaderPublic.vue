@@ -70,7 +70,7 @@
                 <!-- Cerrar sesión -->
                 <div class="border-t glass-stroke py-1">
                   <button
-                    @click="logout; dropdownOpen = false"
+                    @click="() => { logout(); dropdownOpen = false }"
                     class="flex items-center gap-3 px-4 py-2.5 text-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors w-full"
                   >
                     <span class="material-symbols-outlined text-[18px]">logout</span>
@@ -110,7 +110,7 @@
         </template>
         <template v-else>
           <RouterLink to="/admin/settings" class="text-body-md text-on-surface-variant hover:text-on-surface py-2" @click="isMenuOpen = false">Ajustes</RouterLink>
-          <button @click="logout; isMenuOpen = false" class="text-body-md text-on-surface-variant hover:text-on-surface py-2 text-left">Cerrar sesión</button>
+          <button @click="() => { logout(); isMenuOpen = false }" class="text-body-md text-on-surface-variant hover:text-on-surface py-2 text-left">Cerrar sesión</button>
         </template>
       </div>
     </transition>
