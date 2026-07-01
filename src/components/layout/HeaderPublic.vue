@@ -1,5 +1,5 @@
 <template>
-  <header class="fixed top-0 w-full z-50 bg-background/70 backdrop-blur-xl border-b glass-stroke py-3 transition-all duration-300">
+  <header class="fixed top-0 w-full z-50 bg-background/70 backdrop-blur-xl py-1.5 transition-all duration-300">
     <nav class="flex justify-between items-center px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
       <div class="flex items-center gap-12">
         <RouterLink to="/" class="flex items-center">
