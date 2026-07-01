@@ -2,7 +2,6 @@
   <div class="user-dashboard">
     <UserSidebar />
 
-  <div class="user-dashboard__main">
     <main class="user-dashboard__content">
       <section class="user-dashboard__intro">
         <h1>Tu espacio personal</h1>
@@ -15,9 +14,11 @@
       </section>
 
       <hr class="user-dashboard__divider" />
+
+      <div class="user-dashboard__footer">
+        <Footer />
+      </div>
     </main>
-  <Footer />
-    </div>
   </div>
 </template>
 
@@ -38,19 +39,17 @@ const favoritesStore = useFavoritesStore()
   background-color: #0f172a;
 }
 
-.user-dashboard__main {
-  flex: 1;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
 .user-dashboard__content {
   flex: 1;
   padding: 48px 64px;
   color: #ffffff;
+  display: flex;
+  flex-direction: column;
 }
 
+.user-dashboard__footer {
+  margin-top: auto;
+}
 
 .user-dashboard__intro {
   max-width: 560px;
@@ -83,9 +82,7 @@ const favoritesStore = useFavoritesStore()
   .user-dashboard {
     flex-direction: column;
   }
-  .user-dashboard__main {
-    min-height: auto;
-  }
+
   .user-dashboard__content {
     padding: 20px;
   }

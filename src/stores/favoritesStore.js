@@ -1,9 +1,7 @@
 import { defineStore } from 'pinia'
 import { useAuthStore } from './authStore'
 
-const FAVORITES_STORAGE_KEY = "favorites";
-
-export const useFavoritesStore = defineStore("favorites", {
+export const useFavoritesStore = defineStore('favorites', {
   state: () => ({
     favorites: [],
     ratings: []
@@ -43,9 +41,7 @@ export const useFavoritesStore = defineStore("favorites", {
     },
 
     addFavorite(item) {
-      const exists = this.favorites.some(
-        (favorite) => favorite._id === item._id,
-      );
+      const exists = this.favorites.some((favorite) => favorite._id === item._id)
 
       if (!exists) {
         this.favorites.push({
@@ -76,7 +72,7 @@ export const useFavoritesStore = defineStore("favorites", {
     },
 
     updateFavorite(id, updatedData) {
-      const favorite = this.favorites.find((favorite) => favorite._id === id);
+      const favorite = this.favorites.find((favorite) => favorite._id === id)
 
       if (favorite) {
         Object.assign(favorite, updatedData)

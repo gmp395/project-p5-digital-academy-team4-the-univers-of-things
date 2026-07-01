@@ -4,22 +4,22 @@
 
     <nav class="user-sidebar__nav">
       <RouterLink to="/">
-        <Home :size="18" />
+        <span class="user-sidebar__icon">⌂</span>
         Inicio
       </RouterLink>
 
       <RouterLink to="/user/favorites">
-        <Heart :size="18" />
+        <span class="user-sidebar__icon">♡</span>
         Favoritos
       </RouterLink>
 
       <RouterLink to="/user">
-        <User :size="18" />
+        <span class="user-sidebar__icon">○</span>
         Perfil
       </RouterLink>
 
       <RouterLink to="/user/settings">
-        <Settings :size="18" />
+        <span class="user-sidebar__icon">⚙</span>
         Ajustes
       </RouterLink>
     </nav>
@@ -27,14 +27,14 @@
     <div class="user-sidebar__profile">
       <div class="user-sidebar__avatar">
         <img
-          v-if="userStore.avatar"
-          :src="userStore.avatar"
-          :alt="userStore.avatarName"
+          v-if="userAvatar"
+          :src="userAvatar"
+          alt="Avatar de usuario"
         />
         <span v-else>A</span>
       </div>
 
-      <span>{{ userStore.avatarName }}</span>
+      <span>Nombre del usuario</span>
     </div>
 
     <button class="user-sidebar__logout" @click="handleLogout">
@@ -44,18 +44,29 @@
 </template>
 
 <script setup>
-import { useRouter } from "vue-router";
-import { useAuthStore } from "@/stores/authStore";
-import { useUserStore } from "@/stores/userStore";
-import { Home, Heart, User, Settings } from "lucide-vue-next";
-const router = useRouter();
-const authStore = useAuthStore();
-const userStore = useUserStore();
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/authStore'
+
+const router = useRouter()
+const authStore = useAuthStore()
+
+const userAvatar = ref('')
+
+const loadUserAvatar = () => {
+  userAvatar.value = localStorage.getItem('userAvatar') || ''
+}
 
 const handleLogout = () => {
-  authStore.logout();
-  router.push("/login");
-};
+  authStore.logout()
+  router.push('/login')
+}
+
+onMounted(() => {
+  loadUserAvatar()
+
+  window.addEventListener('storage', loadUserAvatar)
+})
 </script>
 
 <style scoped lang="scss">
@@ -83,9 +94,7 @@ const handleLogout = () => {
   gap: 4px;
 
   a {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    display: block;
     color: #cbd5e1;
     text-decoration: none;
     padding: 10px 12px;
@@ -99,6 +108,7 @@ const handleLogout = () => {
     }
   }
 }
+
 .user-sidebar__profile {
   margin-top: auto;
   display: flex;
