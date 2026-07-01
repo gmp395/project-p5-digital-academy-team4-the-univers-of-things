@@ -14,11 +14,11 @@ import { Instagram } from 'lucide-vue-next'
       </p>
 
       <nav class="footer__social" aria-label="Redes sociales">
-        <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+        <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
           <Instagram />
         </a>
 
-        <a href="#" target="_blank" rel="noopener noreferrer" aria-label="X">
+        <a href="https://www.x.com" target="_blank" rel="noopener noreferrer" aria-label="X">
           <span class="footer__x-icon">𝕏</span>
         </a>
       </nav>
@@ -39,7 +39,7 @@ import { Instagram } from 'lucide-vue-next'
   max-width: 1280px;
   margin: 0 auto;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
   gap: 24px;
 }
@@ -47,7 +47,7 @@ import { Instagram } from 'lucide-vue-next'
 .footer__brand {
   flex: 1;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: flex-start;
 }
 
@@ -65,18 +65,19 @@ import { Instagram } from 'lucide-vue-next'
   color: #cbd5e1;
   text-align: center;
   white-space: nowrap;
-  transform: translateY(-10px);
 }
 
 .footer__social {
   flex: 1;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: flex-end;
   gap: 22px;
 }
 
 .footer__social a {
+  display: flex;
+  align-items: center;
   color: #cbd5e1;
   transition: color 0.2s ease;
   text-decoration: none;
@@ -92,10 +93,12 @@ import { Instagram } from 'lucide-vue-next'
 }
 
 .footer__x-icon {
-  display: inline-block;
+  display: flex;
+  align-items: center;
   font-size: 22px;
   font-weight: 700;
-  line-height: 1;
+  height: 22px;
+  line-height: 22px;
 }
 
 @media (max-width: 640px) {
@@ -120,7 +123,6 @@ import { Instagram } from 'lucide-vue-next'
 
   .footer__copyright {
     white-space: normal;
-    transform: none;
   }
 }
 </style>

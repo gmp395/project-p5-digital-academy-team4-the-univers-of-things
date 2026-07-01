@@ -38,18 +38,16 @@ const handleLogin = async () => {
   loading.value = true;
 
   try {
-    const success = await authStore.login(email.value, password.value);
+    const result = await authStore.login(email.value, password.value);
 
-    console.log("success:", success);
-
-    if (success) {
+    if (result.success) {
       if (authStore.user.role === "admin") {
         await router.push("/admin");
       } else {
         await router.push("/user");
       }
     } else {
-      errorMessage.value = "Invalid email or password";
+      errorMessage.value = result.message || "Invalid email or password";
     }
   } catch (error) {
     console.error(error);
