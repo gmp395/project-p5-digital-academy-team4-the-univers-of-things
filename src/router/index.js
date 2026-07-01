@@ -70,12 +70,15 @@ const router = createRouter({
 })
 
 router.beforeEach((to) => {
-  if (to.meta.requiresAuth) {
-    const token = localStorage.getItem('token')
+  const token = localStorage.getItem('token')
+  const user = JSON.parse(localStorage.getItem('user'))
 
-    if (!token) {
-      return '/login'
-    }
+  if (to.meta.requiresAuth && !token) {
+    return '/login'
+  }
+
+  if (to.meta.role && user?.role !== to.meta.role) {
+    return '/'
   }
 
   return true

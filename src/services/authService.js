@@ -32,24 +32,41 @@ export const authService = {
           name: foundUser.name,
           role: foundUser.role,
         },
-      }
+      };
+    }
+
+    const users = JSON.parse(localStorage.getItem("users") || "[]");
+    const registeredUser = users.find(
+      (user) => user.email === email && user.password === password,
+    );
+
+    if (registeredUser) {
+      return {
+        success: true,
+        token: "fake-user-token",
+        user: {
+          name: registeredUser.name,
+          email: registeredUser.email,
+          role: "customer",
+        },
+      };
     }
 
     return {
       success: false,
-      message: 'Invalid email or password.',
-    }
+      message: "Invalid email or password.",
+    };
   },
 
   register(name, email, password) {
-    const users = JSON.parse(localStorage.getItem('users') || '[]')
+    const users = JSON.parse(localStorage.getItem("users") || "[]");
 
     const existingUser = users.find((u) => u.email === email)
     if (existingUser) {
       return {
         success: false,
-        message: 'Este email ya está registrado.',
-      }
+        message: "Este email ya está registrado.",
+      };
     }
 
     const newUser = { name, email, password, role: 'customer' }
@@ -58,8 +75,8 @@ export const authService = {
 
     return {
       success: true,
-      message: 'Cuenta creada correctamente.',
-    }
+      message: "Cuenta creada correctamente.",
+    };
   },
 getAdminPublicInfo() {
     const users = JSON.parse(localStorage.getItem('users') || '[]')

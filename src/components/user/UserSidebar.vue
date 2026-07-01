@@ -4,22 +4,22 @@
 
     <nav class="user-sidebar__nav">
       <RouterLink to="/">
-        <span class="user-sidebar__icon">⌂</span>
+        <Home :size="18" />
         Inicio
       </RouterLink>
 
       <RouterLink to="/user/favorites">
-        <span class="user-sidebar__icon">♡</span>
+        <Heart :size="18" />
         Favoritos
       </RouterLink>
 
       <RouterLink to="/user">
-        <span class="user-sidebar__icon">○</span>
+        <User :size="18" />
         Perfil
       </RouterLink>
 
       <RouterLink to="/user/settings">
-        <span class="user-sidebar__icon">⚙</span>
+        <Settings :size="18" />
         Ajustes
       </RouterLink>
     </nav>
@@ -27,14 +27,14 @@
     <div class="user-sidebar__profile">
       <div class="user-sidebar__avatar">
         <img
-          v-if="userAvatar"
-          :src="userAvatar"
-          alt="Avatar de usuario"
+          v-if="userStore.avatar"
+          :src="userStore.avatar"
+          :alt="userStore.avatarName"
         />
         <span v-else>A</span>
       </div>
 
-      <span>Nombre del usuario</span>
+      <span>{{ userStore.avatarName }}</span>
     </div>
 
     <button class="user-sidebar__logout" @click="handleLogout">
@@ -44,29 +44,18 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { useAuthStore } from '@/stores/authStore'
-
-const router = useRouter()
-const authStore = useAuthStore()
-
-const userAvatar = ref('')
-
-const loadUserAvatar = () => {
-  userAvatar.value = localStorage.getItem('userAvatar') || ''
-}
+import { useRouter } from "vue-router";
+import { useAuthStore } from "@/stores/authStore";
+import { useUserStore } from "@/stores/userStore";
+import { Home, Heart, User, Settings } from "lucide-vue-next";
+const router = useRouter();
+const authStore = useAuthStore();
+const userStore = useUserStore();
 
 const handleLogout = () => {
-  authStore.logout()
-  router.push('/login')
-}
-
-onMounted(() => {
-  loadUserAvatar()
-
-  window.addEventListener('storage', loadUserAvatar)
-})
+  authStore.logout();
+  router.push("/login");
+};
 </script>
 
 <style scoped lang="scss">
@@ -94,7 +83,9 @@ onMounted(() => {
   gap: 4px;
 
   a {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 8px;
     color: #cbd5e1;
     text-decoration: none;
     padding: 10px 12px;
@@ -108,7 +99,6 @@ onMounted(() => {
     }
   }
 }
-
 .user-sidebar__profile {
   margin-top: auto;
   display: flex;
