@@ -1,24 +1,20 @@
 <template>
   <div class="user-dashboard">
     <UserSidebar />
-
-    <main class="user-dashboard__content">
-      <section class="user-dashboard__intro">
-        <h1>Tu espacio personal</h1>
-        <p>Accede a tu perfil, favoritos y ajustes desde aquí.</p>
-      </section>
-
-      <section class="user-dashboard__summary">
-        <UserInfoCard />
-        <UserStatsCard :total-favorites="favoritesStore.favorites.length" />
-      </section>
-
-      <hr class="user-dashboard__divider" />
-
-      <div class="user-dashboard__footer">
-        <Footer />
-      </div>
-    </main>
+    <div class="user-dashboard__right">
+      <main class="user-dashboard__content">
+        <section class="user-dashboard__intro">
+          <h1>Tu espacio personal</h1>
+          <p>Accede a tu perfil, favoritos y ajustes desde aquí.</p>
+        </section>
+        <section class="user-dashboard__summary">
+          <UserInfoCard />
+          <UserStatsCard :total-favorites="favoritesStore.favorites.length" />
+        </section>
+        <hr class="user-dashboard__divider" />
+      </main>
+      <Footer />
+    </div>
   </div>
 </template>
 
@@ -39,16 +35,17 @@ const favoritesStore = useFavoritesStore()
   background-color: #0f172a;
 }
 
+.user-dashboard__right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
 .user-dashboard__content {
   flex: 1;
   padding: 48px 64px;
   color: #ffffff;
-  display: flex;
-  flex-direction: column;
-}
-
-.user-dashboard__footer {
-  margin-top: auto;
 }
 
 .user-dashboard__intro {
@@ -78,6 +75,7 @@ const favoritesStore = useFavoritesStore()
   border: none;
   border-top: 1px solid #23324b;
 }
+
 @media (max-width: 1000px) {
   .user-dashboard {
     flex-direction: column;
