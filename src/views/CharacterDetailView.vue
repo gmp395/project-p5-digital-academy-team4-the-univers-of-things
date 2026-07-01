@@ -39,72 +39,61 @@ const confirmWeekCharacter = () => {
 </script>
 
 <template>
-  <main class="min-h-screen bg-slate-950 p-8 text-white">
+  <main class="min-h-screen bg-slate-950 px-8 py-6 text-white">
     <RouterLink
       to="/"
-      class="mb-6 inline-block rounded-lg bg-blue-600 px-4 py-2 font-semibold hover:bg-blue-700"
+      class="mb-4 inline-block rounded-lg bg-blue-600 px-4 py-2 font-semibold hover:bg-blue-700"
     >
       Volver
     </RouterLink>
 
     <Spinner v-if="loading" />
 
-    <p
-      v-else-if="error"
-      class="text-center text-red-400"
-    >
+    <p v-else-if="error" class="text-center text-red-400">
       No se pudo cargar el personaje.
     </p>
 
     <section
-      v-else-if="character"
-      class="mx-auto max-w-4xl rounded-2xl bg-slate-900 p-8 shadow-lg"
+  v-else-if="character"
+  class="mx-auto max-w-md rounded-2xl bg-slate-900 p-6 shadow-lg"
+>
+  <div class="flex flex-col items-center gap-4">
+    <img
+      :src="character.imageUrl"
+      :alt="character.name"
+      class="h-72 w-full rounded-xl object-contain bg-slate-800"
     >
-      <img
-        :src="character.imageUrl"
-        :alt="character.name"
-        class="mx-auto mb-6 max-h-[500px] rounded-2xl object-contain"
+
+    <h1 class="text-xl font-bold text-center">{{ character.name }}</h1>
+
+    <div v-if="authStore.user?.role === 'customer'" class="flex items-center gap-3">
+      <button
+        @click="favoritesStore.toggleFavorite(character)"
+        class="text-xl transition hover:scale-110"
       >
+        {{ favoritesStore.isFavorite(character._id) ? '❤️' : '🤍' }}
+      </button>
+      <RatingStars :character="character" />
+    </div>
 
-      <h1 class="mb-6 text-center text-4xl font-bold">
-        {{ character.name }}
-      </h1>
-
-      <div
-        v-if="authStore.user?.role === 'customer'"
-        class="mb-6 flex justify-center gap-4"
+    <div v-if="authStore.user?.role === 'admin'">
+      <button
+        @click="showConfirmModal = true"
+        class="rounded-lg bg-yellow-500 px-3 py-1.5 text-sm font-semibold text-slate-950 hover:bg-yellow-400"
       >
-        <button
-          @click="favoritesStore.toggleFavorite(character)"
-          class="text-3xl transition hover:scale-110"
-        >
-          {{ favoritesStore.isFavorite(character._id) ? '❤️' : '🤍' }}
-        </button>
+        👑 Elegir como personaje de la semana
+      </button>
+    </div>
 
-        <RatingStars :character="character" />
-      </div>
+    <p v-if="character.films?.length" class="text-sm text-center">
+      <strong>Películas:</strong> {{ character.films.join(', ') }}
+    </p>
 
-      <div
-        v-if="authStore.user?.role === 'admin'"
-        class="mb-6 flex justify-center"
-      >
-        <button
-          @click="showConfirmModal = true"
-          class="rounded-lg bg-yellow-500 px-5 py-2 font-semibold text-slate-950 hover:bg-yellow-400"
-        >
-          👑 Elegir como personaje de la semana
-        </button>
-      </div>
-
-      <p v-if="character.films?.length" class="mb-3">
-        <strong>Películas:</strong> {{ character.films.join(', ') }}
-      </p>
-
-      <p v-if="character.tvShows?.length" class="mb-3">
-        <strong>Series:</strong> {{ character.tvShows.join(', ') }}
-      </p>
-    </section>
-
+    <p v-if="character.tvShows?.length" class="text-sm text-center">
+      <strong>Series:</strong> {{ character.tvShows.join(', ') }}
+    </p>
+  </div>
+</section>
     <ConfirmWeekCharacterModal
       v-if="showConfirmModal && character"
       :character="character"

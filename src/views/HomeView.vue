@@ -11,7 +11,7 @@ import TopRatedCharacters from '@/components/TopRatedCharacters/topRatedCharacte
 const charactersStore = useCharactersStore()
 
 const currentPage = ref(1)
-const charactersPerPage = 10
+const charactersPerPage = 15
 
 const filteredCharacters = computed(() => {
   return charactersStore.characters.filter((personaje) =>
@@ -57,14 +57,14 @@ onMounted(() => {
 </script>
 
 <template>
-  <main class="min-h-screen bg-slate-950 p-8">
+  <main class="min-h-screen bg-slate-950 px-8 py-4">
     <Hero />
 
     <TopRatedCharacters />
 
     <BarraBusqueda />
 
-    <h1 class="mb-8 text-3xl font-bold text-white">
+    <h1 class="mb-4 text-2xl font-bold text-white">
       Disney Characters
     </h1>
 
@@ -72,7 +72,7 @@ onMounted(() => {
 
     <section
       v-else
-      class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5"
+      class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5"
     >
       <Tarjetaspersonajes
         v-for="personaje in paginatedCharacters"
@@ -83,7 +83,7 @@ onMounted(() => {
 
     <div
       v-if="!charactersStore.loading && totalPages > 1"
-      class="mt-8 flex items-center justify-center gap-4 text-white"
+      class="mt-4 flex items-center justify-center gap-4 text-white"
     >
       <button
         @click="previousPage"
@@ -93,9 +93,7 @@ onMounted(() => {
         Anterior
       </button>
 
-      <span>
-        Página {{ currentPage }} de {{ totalPages }}
-      </span>
+      <span>Página {{ currentPage }} de {{ totalPages }}</span>
 
       <button
         @click="nextPage"
