@@ -1,30 +1,20 @@
 import { defineStore } from 'pinia'
-import { hashPassword } from '@/utils/hash'
 
 export const useAdminStore = defineStore('admin', {
   state: () => ({
-    users: JSON.parse(localStorage.getItem('users')) || [
-      {
-        id: 1,
-        name: 'Administrador',
-        email: 'test@test.com',
-        password: '123456',
-        role: 'admin',
-        status: 'allowed',
-        avatar: ''
-      }
-    ],
+    users: JSON.parse(localStorage.getItem('users')) || [],
     avatar: JSON.parse(localStorage.getItem('adminProfile'))?.avatar || null
   }),
+
   getters: {
     totalUsers: (state) => state.users.length
   },
+
   actions: {
-    async addUser(user) {
-      const hashedPassword = await hashPassword(user.password)
-      this.users.push({ ...user, password: hashedPassword })
-      this.saveToLocalStorage()
+    refreshUsers() {
+      this.users = JSON.parse(localStorage.getItem('users')) || []
     },
+
     toggleUserStatus(id) {
       const user = this.users.find(u => u.id === id)
       if (user) {
@@ -32,10 +22,12 @@ export const useAdminStore = defineStore('admin', {
         this.saveToLocalStorage()
       }
     },
+
     setAvatar(url) {
       this.avatar = url
       this.saveToLocalStorage()
     },
+
     saveToLocalStorage() {
       localStorage.setItem('users', JSON.stringify(this.users))
       localStorage.setItem('adminProfile', JSON.stringify({ avatar: this.avatar }))

@@ -1,5 +1,5 @@
 <template>
-  <div class="user-directory -mt-10 px-6">
+  <div class="user-directory px-6">
 
     <h1 class="text-3xl font-bold text-on-surface mb-8">Directorio de usuarios</h1>
 
@@ -48,9 +48,14 @@
 </template>
 
 <script setup>
+import { onMounted } from 'vue'
 import { useAdminStore } from '@/stores/adminStore'
 
 const adminStore = useAdminStore()
+
+onMounted(() => {
+  adminStore.refreshUsers()
+})
 </script>
 
 <style scoped>
