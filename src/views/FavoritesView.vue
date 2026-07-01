@@ -194,7 +194,7 @@ onMounted(() => {
 
 .favorites-page__content {
   flex: 1;
-  padding: 32px 48px 24px;
+  padding: 40px 48px 24px;
   color: white;
 }
 
@@ -202,13 +202,13 @@ onMounted(() => {
   margin-bottom: 24px;
 
   h1 {
-    font-size: 2.8rem;
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: #e2e8f0;
     margin-bottom: 8px;
   }
 
-  p {
-    color: #cbd5e1;
-  }
+  p { color: #cbd5e1; }
 }
 
 .favorites-page__add {
@@ -240,8 +240,8 @@ onMounted(() => {
   }
 
   .favorites-page__content {
-    padding: 24px;
-  }
+  padding: 40px 48px 24px;
+}
 
   .favorites-page__grid {
     grid-template-columns: repeat(2, 1fr);
@@ -327,7 +327,8 @@ onMounted(() => {
   }
 
   .favorites-page__header h1 {
-    font-size: 2rem;
-  }
+  font-size: 2rem;
+  color: #ffffff;
+}
 }
 </style>

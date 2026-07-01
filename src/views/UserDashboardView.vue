@@ -44,23 +44,17 @@ const favoritesStore = useFavoritesStore()
 
 .user-dashboard__content {
   flex: 1;
-  padding: 48px 64px;
-  color: #ffffff;
+  padding: 40px 48px 24px;
 }
 
 .user-dashboard__intro {
-  max-width: 560px;
-  margin-bottom: 32px;
-
   h1 {
-    font-size: 2rem;
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: #e2e8f0;
     margin-bottom: 12px;
   }
-
-  p {
-    color: #cbd5e1;
-    line-height: 1.6;
-  }
+  p { color: #cbd5e1; line-height: 1.6; }
 }
 
 .user-dashboard__summary {
@@ -77,16 +71,8 @@ const favoritesStore = useFavoritesStore()
 }
 
 @media (max-width: 1000px) {
-  .user-dashboard {
-    flex-direction: column;
-  }
-
-  .user-dashboard__content {
-    padding: 20px;
-  }
-
-  .user-dashboard__summary {
-    flex-direction: column;
-  }
+  .user-dashboard { flex-direction: column; }
+  .user-dashboard__content { padding: 40px 24px; }
+  .user-dashboard__summary { flex-direction: column; }
 }
 </style>

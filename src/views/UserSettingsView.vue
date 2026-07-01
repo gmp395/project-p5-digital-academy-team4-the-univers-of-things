@@ -4,7 +4,7 @@
     <div class="settings-page__right">
       <main class="settings-page__content">
         <section class="settings-page__header">
-          <h1>Ajustes de cuenta</h1>
+          <h1 >Ajustes de cuenta</h1>
           <p>Gestiona tu avatar y cambia tu contraseña.</p>
         </section>
 
@@ -159,16 +159,24 @@ onMounted(() => { getCharacters() })
 
 .settings-page__content {
   flex: 1;
-  padding: 24px 48px 16px;
+  padding: 40px 48px 24px;
   color: white;
 }
 
 .settings-page__header {
-  margin-bottom: 16px;
+  margin-bottom: 32px;
 
-  h1 { font-size: 2.2rem; margin-bottom: 6px; }
+  h1 {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: #e2e8f0;
+    margin-bottom: 8px;
+  }
+
   p { color: #cbd5e1; }
 }
+
+
 
 .settings-page__card {
   max-width: 760px;
@@ -255,7 +263,7 @@ onMounted(() => { getCharacters() })
 
 @media (max-width: 1000px) {
   .settings-page { flex-direction: column; }
-  .settings-page__content { padding: 20px; }
+  .settings-page__content { padding: 40px 24px; }
   .settings-page__card { max-width: 100%; }
   .settings-page__avatar-row { flex-direction: column; align-items: flex-start; }
   .settings-page__avatar-info { width: 100%; }
