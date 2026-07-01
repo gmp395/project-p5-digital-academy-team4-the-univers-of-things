@@ -3,23 +3,20 @@
     <h2 class="user-sidebar__logo">CineMagic</h2>
 
     <nav class="user-sidebar__nav">
-      <RouterLink to="/">
-        <span class="user-sidebar__icon">⌂</span>
+    <RouterLink to="/">
+        <Home class="user-sidebar__icon" :size="18" />
         Inicio
       </RouterLink>
-
       <RouterLink to="/user/favorites">
-        <span class="user-sidebar__icon">♡</span>
+        <Heart class="user-sidebar__icon" :size="18" />
         Favoritos
       </RouterLink>
-
       <RouterLink to="/user">
-        <span class="user-sidebar__icon">○</span>
+        <User class="user-sidebar__icon" :size="18" />
         Perfil
       </RouterLink>
-
       <RouterLink to="/user/settings">
-        <span class="user-sidebar__icon">⚙</span>
+        <Settings class="user-sidebar__icon" :size="18" />
         Ajustes
       </RouterLink>
     </nav>
@@ -34,7 +31,7 @@
         <span v-else>A</span>
       </div>
 
-      <span>Nombre del usuario</span>
+      <span>{{ authStore.user?.name || 'Usuario' }}</span>
     </div>
 
     <button class="user-sidebar__logout" @click="handleLogout">
@@ -47,6 +44,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
+import { Home, Heart, User, Settings } from 'lucide-vue-next'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -64,8 +62,8 @@ const handleLogout = () => {
 
 onMounted(() => {
   loadUserAvatar()
-
   window.addEventListener('storage', loadUserAvatar)
+  window.addEventListener('avatar-updated', loadUserAvatar)
 })
 </script>
 
@@ -92,15 +90,15 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   gap: 4px;
-
   a {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 10px;
     color: #cbd5e1;
     text-decoration: none;
     padding: 10px 12px;
     border-radius: 8px;
     font-size: 0.95rem;
-
     &:hover,
     &.router-link-active {
       background-color: #253247;

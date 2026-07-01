@@ -6,7 +6,7 @@ import { RouterLink } from 'vue-router'
 const favoritesStore = useFavoritesStore()
 
 const topRatedCharacters = computed(() => {
-  return favoritesStore.ratings
+  return favoritesStore.favorites
     .filter((character) => character.rating > 0)
     .sort((a, b) => b.rating - a.rating)
     .slice(0, 5)

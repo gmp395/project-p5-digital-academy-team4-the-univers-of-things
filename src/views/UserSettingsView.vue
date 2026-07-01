@@ -26,6 +26,20 @@
               Elige un personaje Disney como avatar.
             </label>
 
+            <label>
+              Inicial
+              <select v-model="selectedLetter">
+                <option value="">Todas</option>
+                <option
+                  v-for="letter in alphabet"
+                  :key="letter"
+                  :value="letter"
+                >
+                  {{ letter }}
+                </option>
+              </select>
+            </label>
+
             <select
               id="character-avatar"
               v-model="selectedCharacterId"
@@ -34,13 +48,23 @@
               <option value="">Selecciona un personaje</option>
 
               <option
-                v-for="character in characters"
+                v-for="character in filteredCharacters"
                 :key="character._id"
                 :value="character._id"
               >
                 {{ character.name }}
               </option>
             </select>
+
+            <label>
+              Buscar personaje
+              <input
+                v-model="searchCharacter"
+                type="text"
+                placeholder="Ejemplo: Baloo"
+                @input="selectedLetter = ''"
+              />
+            </label>
 
             <p
               v-if="selectedCharacterName"
@@ -58,24 +82,60 @@
         <form class="settings-page__form">
           <label>
             Contraseña actual
-            <input
-              type="password"
-              placeholder="Introduce tu contraseña actual"
-            />
+            <div class="settings-page__password-field">
+              <input
+                :type="showCurrentPassword ? 'text' : 'password'"
+                v-model="currentPassword"
+                placeholder="Introduce tu contraseña actual"
+              />
+              <button
+                type="button"
+                class="settings-page__toggle-password"
+                @click="showCurrentPassword = !showCurrentPassword"
+              >
+                <Eye v-if="showCurrentPassword" :size="18" />
+                <EyeOff v-else :size="18" />
+              </button>
+            </div>
           </label>
-
           <div class="settings-page__form-row">
             <label>
               Nueva contraseña
-              <input type="password" placeholder="Nueva contraseña" />
+              <div class="settings-page__password-field">
+                <input
+                  :type="showNewPassword ? 'text' : 'password'"
+                  v-model="newPassword"
+                  placeholder="Nueva contraseña"
+                />
+                <button
+                  type="button"
+                  class="settings-page__toggle-password"
+                  @click="showNewPassword = !showNewPassword"
+                >
+                  <Eye v-if="showCurrentPassword" :size="18" />
+                  <EyeOff v-else :size="18" />
+                </button>
+              </div>
             </label>
-
             <label>
               Confirmar contraseña
-              <input type="password" placeholder="Confirma la contraseña" />
+              <div class="settings-page__password-field">
+                <input
+                  :type="showConfirmPassword ? 'text' : 'password'"
+                  v-model="confirmPassword"
+                  placeholder="Confirma la contraseña"
+                />
+                <button
+                  type="button"
+                  class="settings-page__toggle-password"
+                  @click="showConfirmPassword = !showConfirmPassword"
+                >
+                  <Eye v-if="showCurrentPassword" :size="18" />
+                  <EyeOff v-else :size="18" />
+                </button>
+              </div>
             </label>
           </div>
-
           <button type="button">Actualizar contraseña</button>
         </form>
       </section>
@@ -88,48 +148,79 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue'
-import UserSidebar from '@/components/user/UserSidebar.vue'
-import Footer from '@/components/Footer.vue'
+import { computed, onMounted, ref } from "vue";
+import { Eye, EyeOff } from "lucide-vue-next";
+import UserSidebar from "@/components/user/UserSidebar.vue";
+import Footer from "@/components/Footer.vue";
 
-const characters = ref([])
-const selectedCharacterId = ref('')
-const selectedAvatar = ref(localStorage.getItem('userAvatar') || '')
-const selectedCharacterName = ref(localStorage.getItem('userAvatarName') || '')
-
+const characters = ref([]);
+const selectedCharacterId = ref("");
+const selectedAvatar = ref(localStorage.getItem("userAvatar") || "");
+const selectedCharacterName = ref(localStorage.getItem("userAvatarName") || "");
+const selectedLetter = ref("");
+const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+const searchCharacter = ref("");
+const currentPassword = ref("");
+const newPassword = ref("");
+const confirmPassword = ref("");
+const showCurrentPassword = ref(false);
+const showNewPassword = ref(false);
+const showConfirmPassword = ref(false);
+const filteredCharacters = computed(() => {
+  const search = searchCharacter.value.trim().toLowerCase();
+  return characters.value
+    .filter((character) => {
+      const name = character.name.toLowerCase();
+      const matchesLetter = selectedLetter.value
+        ? name.startsWith(selectedLetter.value.toLowerCase())
+        : true;
+      const matchesSearch = search ? name.includes(search) : true;
+      return matchesLetter && matchesSearch;
+    })
+    .sort((a, b) => a.name.localeCompare(b.name));
+});
 const selectedCharacter = computed(() =>
   characters.value.find(
     (character) => character._id === Number(selectedCharacterId.value),
   ),
-)
+);
 
 const getCharacters = async () => {
   try {
-    const response = await fetch(
-      'https://api.disneyapi.dev/character?page=1&pageSize=50',
-    )
-
-    const data = await response.json()
-
-    characters.value = data.data.filter((character) => character.imageUrl)
+    const firstResponse = await fetch(
+      "https://api.disneyapi.dev/character?page=1&pageSize=50",
+    );
+    const firstData = await firstResponse.json();
+    const totalPages = firstData.info.totalPages;
+    const requests = [];
+    for (let page = 1; page <= totalPages; page++) {
+      requests.push(
+        fetch(
+          `https://api.disneyapi.dev/character?page=${page}&pageSize=50`,
+        ).then((response) => response.json()),
+      );
+    }
+    const pages = await Promise.all(requests);
+    const allCharacters = pages.flatMap((page) => page.data);
+    characters.value = allCharacters
+      .filter((character) => character.imageUrl)
+      .sort((a, b) => a.name.localeCompare(b.name));
   } catch (error) {
-    console.error('Error al cargar personajes Disney:', error)
+    console.error("Error al cargar personajes Disney:", error);
   }
-}
+};
 
 const updateAvatar = () => {
-  if (!selectedCharacter.value) return
-
-  selectedAvatar.value = selectedCharacter.value.imageUrl
-  selectedCharacterName.value = selectedCharacter.value.name
-
-  localStorage.setItem('userAvatar', selectedAvatar.value)
-  localStorage.setItem('userAvatarName', selectedCharacterName.value)
-}
-
+  if (!selectedCharacter.value) return;
+  selectedAvatar.value = selectedCharacter.value.imageUrl;
+  selectedCharacterName.value = selectedCharacter.value.name;
+  localStorage.setItem("userAvatar", selectedAvatar.value);
+  localStorage.setItem("userAvatarName", selectedCharacterName.value);
+  window.dispatchEvent(new Event("avatar-updated"));
+};
 onMounted(() => {
-  getCharacters()
-})
+  getCharacters();
+});
 </script>
 
 <style scoped lang="scss">
@@ -263,6 +354,33 @@ onMounted(() => {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 16px;
+}
+
+.settings-page__password-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  input {
+    width: 100%;
+    padding-right: 40px;
+  }
+}
+
+.settings-page__toggle-password {
+  position: absolute;
+  right: 10px;
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 0;
+
+  &:hover {
+    color: #ffffff;
+  }
 }
 
 .settings-page__footer {

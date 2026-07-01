@@ -18,6 +18,5 @@ app.use(router)
 const authStore = useAuthStore() 
 authStore.initAuth()         
 const favoritesStore = useFavoritesStore()
-favoritesStore.loadFavorites()     
 
 app.mount('#app')
