@@ -39,18 +39,18 @@ onMounted(() => {
 
           <!-- Sin sesión -->
           <template v-if="!authStore.isAuthenticated">
-          <RouterLink
-            to="/login"
-            class="header__nav-link"
-            :class="{ 'header__nav-link--active': route.path === '/login' }"
-          >Login</RouterLink>
+            <RouterLink
+              to="/login"
+              class="header__nav-link"
+              :class="{ 'header__nav-link--active': route.path === '/login' }"
+            >Login</RouterLink>
 
-          <RouterLink
-            to="/register"
-            class="header__nav-link"
-            :class="{ 'header__nav-link--active': route.path === '/register' }"
-          >Registro</RouterLink>
-        </template>
+            <RouterLink
+              to="/register"
+              class="header__nav-link"
+              :class="{ 'header__nav-link--active': route.path === '/register' }"
+            >Registro</RouterLink>
+          </template>
 
           <!-- Admin: dropdown -->
           <div v-else-if="authStore.userRole === 'admin'" class="header__dropdown-wrapper">
@@ -81,14 +81,35 @@ onMounted(() => {
             </transition>
           </div>
 
-          <!-- Usuario regular -->
-          <template v-else>
-            <RouterLink to="/user" class="header__user-link">
-              <img v-if="userAvatar" :src="userAvatar" alt="Avatar" class="header__user-avatar" />
-              <span>{{ userName }}</span>
-            </RouterLink>
-            <button @click="logout" class="header__auth-link">Cerrar sesión</button>
-          </template>
+          <!-- Usuario regular: mismo dropdown que admin -->
+          <div v-else class="header__dropdown-wrapper">
+            <div v-if="dropdownOpen" @click="dropdownOpen = false" class="header__overlay"></div>
+            <button @click="dropdownOpen = !dropdownOpen" class="header__avatar-btn">
+              <img v-if="userAvatar" :src="userAvatar" alt="Avatar" class="header__avatar-img" />
+              <span v-else class="material-symbols-outlined">person</span>
+            </button>
+            <transition name="dropdown">
+              <div v-if="dropdownOpen" class="header__dropdown">
+                <div class="header__dropdown-header">
+                  <p class="header__dropdown-name">{{ userName }}</p>
+                  <p class="header__dropdown-email">{{ authStore.user?.email }}</p>
+                </div>
+                <div class="header__dropdown-section">
+                  <RouterLink to="/user" @click="dropdownOpen = false" class="header__dropdown-link">
+                    <span class="material-symbols-outlined">dashboard</span>
+                    Mi perfil
+                  </RouterLink>
+                </div>
+                <div class="header__dropdown-section header__dropdown-section--border">
+                  <button @click="() => { logout(); dropdownOpen = false }" class="header__dropdown-btn">
+                    <span class="material-symbols-outlined">logout</span>
+                    Cerrar sesión
+                  </button>
+                </div>
+              </div>
+            </transition>
+          </div>
+
         </div>
 
         <button class="header__mobile-toggle" @click="isMenuOpen = !isMenuOpen" :aria-expanded="isMenuOpen" aria-label="Abrir menú de navegación">
@@ -109,7 +130,7 @@ onMounted(() => {
           <button @click="() => { logout(); isMenuOpen = false }" class="header__mobile-btn">Cerrar sesión</button>
         </template>
         <template v-else>
-          <RouterLink to="/user" class="header__mobile-link" @click="isMenuOpen = false">{{ userName }}</RouterLink>
+          <RouterLink to="/user" class="header__mobile-link" @click="isMenuOpen = false">Mi perfil</RouterLink>
           <button @click="() => { logout(); isMenuOpen = false }" class="header__mobile-btn">Cerrar sesión</button>
         </template>
       </div>
@@ -191,19 +212,20 @@ onMounted(() => {
   }
 
   &__auth-link {
-      font-size: 0.875rem;
-      color: #94a3b8;
-      text-decoration: none;
-      background: none;
-      border: none;
-      cursor: pointer;
-      transition: color 0.2s;
-      padding-bottom: 4px;
-      outline: none;
+    font-size: 0.875rem;
+    color: #94a3b8;
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color 0.2s;
+    padding-bottom: 4px;
+    outline: none;
 
-      &:hover { color: #e2e8f0; }
-      &--active { color: #60a5fa; font-weight: 700; border-bottom: 2px solid #60a5fa; }
-}
+    &:hover { color: #e2e8f0; }
+    &--active { color: #60a5fa; font-weight: 700; border-bottom: 2px solid #60a5fa; }
+  }
+
   &__dropdown-wrapper { position: relative; }
 
   &__overlay { position: fixed; inset: 0; z-index: 40; }
@@ -287,20 +309,6 @@ onMounted(() => {
 
     .material-symbols-outlined { font-size: 18px; }
   }
-
-  &__user-link {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: #94a3b8;
-    text-decoration: none;
-    font-size: 0.875rem;
-    transition: color 0.2s;
-
-    &:hover { color: #e2e8f0; }
-  }
-
-  &__user-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
 
   &__mobile-toggle {
     display: flex;
