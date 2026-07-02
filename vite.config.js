@@ -7,6 +7,7 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/project-p5-digital-academy-team4-the-univers-of-things/',
   plugins: [
     vue(),
     vueDevTools(),
