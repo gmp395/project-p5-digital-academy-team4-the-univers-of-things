@@ -168,4 +168,8 @@
       "GRAD" 0,
       "opsz" 24;
   }
+  .app > .router-view,
+  #app > div > main {
+    flex: 1;
+}
 }
