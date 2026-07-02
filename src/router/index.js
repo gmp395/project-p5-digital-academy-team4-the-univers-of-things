@@ -8,11 +8,7 @@ const router = createRouter({
   routes: [
     { path: '/', name: 'home', component: HomeView },
     { path: '/login', name: 'login', component: LoginView },
-    {
-      path: '/register',
-      name: 'register',
-      component: () => import('../views/RegisterView.vue')
-    },
+    { path: '/register', name: 'register', component: () => import('../views/RegisterView.vue') },
     {
       path: '/admin',
       component: () => import('../views/admin/AdminLayout.vue'),
@@ -25,29 +21,10 @@ const router = createRouter({
         { path: 'settings', name: 'admin-settings', component: () => import('../views/admin/AdminSettings.vue') }
       ]
     },
-    {
-      path: '/user',
-      name: 'user-dashboard',
-      component: () => import('../views/UserDashboardView.vue'),
-      meta: { requiresAuth: true, hideHeader: true }
-    },
-    {
-      path: '/user/favorites',
-      name: 'favorites',
-      component: () => import('../views/FavoritesView.vue'),
-      meta: { requiresAuth: true, hideHeader: true }
-    },
-    {
-      path: '/user/settings',
-      name: 'user-settings',
-      component: () => import('../views/UserSettingsView.vue'),
-      meta: { requiresAuth: true, hideHeader: true }
-    },
-    {
-      path: '/character/:id',
-      name: 'character-detail',
-      component: () => import('../views/CharacterDetailView.vue')
-    }
+    { path: '/user', name: 'user-dashboard', component: () => import('../views/UserDashboardView.vue'), meta: { requiresAuth: true, hideHeader: true, hideFooter: true } },
+    { path: '/user/favorites', name: 'favorites', component: () => import('../views/FavoritesView.vue'), meta: { requiresAuth: true, hideHeader: true, hideFooter: true } },
+    { path: '/user/settings', name: 'user-settings', component: () => import('../views/UserSettingsView.vue'), meta: { requiresAuth: true, hideHeader: true, hideFooter: true } },
+    { path: '/character/:id', name: 'character-detail', component: () => import('../views/CharacterDetailView.vue') }
   ]
 })
 

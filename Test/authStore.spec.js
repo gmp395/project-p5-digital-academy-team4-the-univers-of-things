@@ -30,7 +30,7 @@ describe('authStore', () => {
 
     const result = await store.login('test@test.com', '123456')
 
-    expect(result).toBe(true)
+    expect(result.success).toBe(true)
     expect(store.isAuthenticated).toBe(true)
     expect(store.token).toBe('fake-token')
   })

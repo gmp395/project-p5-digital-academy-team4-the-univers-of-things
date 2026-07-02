@@ -22,7 +22,6 @@ onMounted(async () => {
   try {
     const response = await fetch(`https://api.disneyapi.dev/character/${route.params.id}`)
     const data = await response.json()
-
     character.value = data.data
   } catch (err) {
     console.error('Error al cargar el personaje:', err)
@@ -39,70 +38,60 @@ const confirmWeekCharacter = () => {
 </script>
 
 <template>
-  <main class="min-h-screen bg-slate-950 p-8 text-white">
+  <main class="bg-slate-950 px-8 py-6 text-white">
     <RouterLink
       to="/"
       class="mb-6 inline-block rounded-lg bg-blue-600 px-4 py-2 font-semibold hover:bg-blue-700"
     >
-      Volver
+      ← Volver
     </RouterLink>
 
     <Spinner v-if="loading" />
 
-    <p
-      v-else-if="error"
-      class="text-center text-red-400"
-    >
+    <p v-else-if="error" class="text-center text-red-400">
       No se pudo cargar el personaje.
     </p>
 
     <section
       v-else-if="character"
-      class="mx-auto max-w-4xl rounded-2xl bg-slate-900 p-8 shadow-lg"
+      class="mx-auto max-w-lg rounded-2xl bg-slate-900 p-6 shadow-lg"
     >
-      <img
-        :src="character.imageUrl"
-        :alt="character.name"
-        class="mx-auto mb-6 max-h-[500px] rounded-2xl object-contain"
-      >
-
-      <h1 class="mb-6 text-center text-4xl font-bold">
-        {{ character.name }}
-      </h1>
-
-      <div
-        v-if="authStore.user?.role === 'customer'"
-        class="mb-6 flex justify-center gap-4"
-      >
-        <button
-          @click="favoritesStore.toggleFavorite(character)"
-          class="text-3xl transition hover:scale-110"
+      <div class="flex flex-col items-center gap-4">
+        <img
+          :src="character.imageUrl"
+          :alt="character.name"
+          class="h-72 w-full rounded-xl object-contain bg-slate-800"
         >
-          {{ favoritesStore.isFavorite(character._id) ? '❤️' : '🤍' }}
-        </button>
 
-        <RatingStars :character="character" />
+        <h1 class="text-xl font-bold text-center">{{ character.name }}</h1>
+
+        <div v-if="authStore.user?.role === 'customer'" class="flex items-center gap-3">
+          <button
+            @click="favoritesStore.toggleFavorite(character)"
+            class="text-xl transition hover:scale-110"
+          >
+            {{ favoritesStore.isFavorite(character._id) ? '❤️' : '🤍' }}
+          </button>
+          <RatingStars :character="character" />
+        </div>
+
+        <div v-if="authStore.user?.role === 'admin'">
+          <button
+            @click="showConfirmModal = true"
+            class="rounded-lg bg-yellow-500 px-3 py-1.5 text-sm font-semibold text-slate-950 hover:bg-yellow-400"
+          >
+            👑 Elegir como personaje de la semana
+          </button>
+        </div>
+
+        <p v-if="character.films?.length" class="text-sm text-center text-slate-300">
+          <strong class="text-white">Películas:</strong> {{ character.films.join(', ') }}
+        </p>
+
+        <p v-if="character.tvShows?.length" class="text-sm text-center text-slate-300">
+          <strong class="text-white">Series:</strong> {{ character.tvShows.join(', ') }}
+        </p>
       </div>
-
-      <div
-        v-if="authStore.user?.role === 'admin'"
-        class="mb-6 flex justify-center"
-      >
-        <button
-          @click="showConfirmModal = true"
-          class="rounded-lg bg-yellow-500 px-5 py-2 font-semibold text-slate-950 hover:bg-yellow-400"
-        >
-          👑 Elegir como personaje de la semana
-        </button>
-      </div>
-
-      <p v-if="character.films?.length" class="mb-3">
-        <strong>Películas:</strong> {{ character.films.join(', ') }}
-      </p>
-
-      <p v-if="character.tvShows?.length" class="mb-3">
-        <strong>Series:</strong> {{ character.tvShows.join(', ') }}
-      </p>
     </section>
 
     <ConfirmWeekCharacterModal

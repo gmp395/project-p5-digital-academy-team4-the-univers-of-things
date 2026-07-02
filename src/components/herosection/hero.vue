@@ -6,7 +6,7 @@ import HeroWeekCharacterModal from './HeroWeekCharacterModal.vue'
 const showModal = ref(false)
 </script>
 <template>
-  <section class="relative h-125 overflow-hidden rounded-3xl mb-12">
+  <section class="relative h-72 overflow-hidden rounded-3xl mb-6 mt-6">
 
     <!-- Imagen de fondo -->
     <img
@@ -23,26 +23,23 @@ const showModal = ref(false)
 
       <div class="max-w-xl text-white">
 
-        <h2 class="mb-4 text-4xl font-bold md:text-6xl">
+        <h2 class="mb-3 text-3xl font-bold md:text-4xl">
           Descubre la magia de cada personaje
         </h2>
 
-        <p class="text-base md:text-xl text-slate-200">
+        <p class="text-sm md:text-base text-slate-200">
           Sumérgete en el mundo de los personajes Disney y descubre sus historias, aventuras y universos.
         </p>
-        <button
-  @click="showModal = true"
-  class="mt-8 rounded-lg bg-blue-600 px-6 py-3 font-semibold transition hover:bg-blue-700"
->
-  ⭐ Personaje de la semana
-</button>
+        <button @click="showModal = true" class="mt-4 rounded-lg bg-blue-600 px-5 py-2 font-semibold transition hover:bg-blue-700">
+        ⭐ Personaje de la semana
+      </button>
 
       </div>
 
     </div>
-<HeroWeekCharacterModal
-  v-if="showModal"
-  @close="showModal = false"
-/>
+      <HeroWeekCharacterModal
+        v-if="showModal"
+        @close="showModal = false"
+      />
   </section>
 </template>

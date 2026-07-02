@@ -12,7 +12,9 @@ const shouldHideFooter = computed(() => route.matched.some(record => record.meta
 <template>
   <div class="app" :class="{ 'app--public': !shouldHideHeader }">
     <HeaderPublic v-if="!shouldHideHeader" />
-    <RouterView />
+    <div class="app__content">
+      <RouterView />
+    </div>
     <Footer v-if="!shouldHideFooter" />
   </div>
 </template>
@@ -20,5 +22,11 @@ const shouldHideFooter = computed(() => route.matched.some(record => record.meta
 <style scoped lang="scss">
 .app {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  &__content {
+    flex: 1;
+  }
 }
 </style>

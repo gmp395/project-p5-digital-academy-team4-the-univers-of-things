@@ -145,7 +145,7 @@
   }
 
   .app--public {
-    padding-top: 64px;
+    padding-top: 52px;
   }
 
   .glass-stroke {
@@ -168,4 +168,11 @@
       "GRAD" 0,
       "opsz" 24;
   }
+  .app > .router-view,
+  #app > div > main {
+    flex: 1;
+}
+body {
+  background-color: #020617; /* slate-950 */
+}
 }

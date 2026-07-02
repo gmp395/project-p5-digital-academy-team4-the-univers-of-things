@@ -1,5 +1,8 @@
 import { defineStore } from 'pinia'
 
+const CACHE_KEY = 'disneyCharactersCache'
+const CACHE_TTL = 1000 * 60 * 60 * 24 // 24 horas
+
 export const useCharactersStore = defineStore('characters', {
   state: () => ({
     characters: [],
@@ -10,29 +13,48 @@ export const useCharactersStore = defineStore('characters', {
 
   actions: {
     async fetchCharacters() {
+      // Si ya hay datos en memoria, no recargar (preserva edits del admin)
+      if (this.characters.length > 0) return
+
+      // Verificar caché
+      const cached = localStorage.getItem(CACHE_KEY)
+      if (cached) {
+        const { data, timestamp } = JSON.parse(cached)
+        if (Date.now() - timestamp < CACHE_TTL) {
+          this.characters = data
+          return
+        }
+      }
+
       this.loading = true
 
       try {
-        let allCharacters = []
-        let page = 1
-        let hasNextPage = true
+        // Primera petición para saber cuántas páginas hay
+        const firstResponse = await fetch('https://api.disneyapi.dev/character?page=1&pageSize=500')
+        const firstData = await firstResponse.json()
+        const totalPages = firstData.info.totalPages
 
-        while (hasNextPage) {
-          const response = await fetch(
-            `https://api.disneyapi.dev/character?page=${page}`
+        // Cargar todas las páginas en paralelo
+        const requests = []
+        for (let page = 1; page <= totalPages; page++) {
+          requests.push(
+            fetch(`https://api.disneyapi.dev/character?page=${page}&pageSize=500`).then(r => r.json())
           )
-
-          const data = await response.json()
-
-          allCharacters.push(
-            ...data.data.filter((character) => character.imageUrl)
-          )
-
-          hasNextPage = data.info.nextPage !== null
-          page++
         }
 
+        const pages = await Promise.all(requests)
+        const allCharacters = pages
+          .flatMap(p => p.data)
+          .filter(c => c.imageUrl)
+
         this.characters = allCharacters
+
+        // Guardar en caché
+        localStorage.setItem(CACHE_KEY, JSON.stringify({
+          data: allCharacters,
+          timestamp: Date.now()
+        }))
+
       } catch (error) {
         console.error('Error al obtener los personajes:', error)
       } finally {
