@@ -13,6 +13,9 @@ export const useCharactersStore = defineStore('characters', {
 
   actions: {
     async fetchCharacters() {
+      // Si ya hay datos en memoria, no recargar (preserva edits del admin)
+      if (this.characters.length > 0) return
+
       // Verificar caché
       const cached = localStorage.getItem(CACHE_KEY)
       if (cached) {
@@ -35,8 +38,8 @@ export const useCharactersStore = defineStore('characters', {
         const requests = []
         for (let page = 1; page <= totalPages; page++) {
           requests.push(
-          fetch(`https://api.disneyapi.dev/character?page=${page}&pageSize=500`).then(r => r.json())
-        )
+            fetch(`https://api.disneyapi.dev/character?page=${page}&pageSize=500`).then(r => r.json())
+          )
         }
 
         const pages = await Promise.all(requests)
