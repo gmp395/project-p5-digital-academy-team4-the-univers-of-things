@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
-import { useFavoritesStore } from '@/stores/favoritesStore'
 import { RouterLink } from 'vue-router'
+import { useFavoritesStore } from '@/stores/favoritesStore'
 
 const favoritesStore = useFavoritesStore()
 
@@ -14,22 +14,12 @@ const topRatedCharacters = computed(() => {
 </script>
 
 <template>
-  <section class="px-6 py-10">
+  <section v-if="topRatedCharacters.length" class="px-6 py-10">
     <h2 class="mb-6 text-2xl font-bold text-white">
       ⭐ Top Rated by Users
     </h2>
 
-    <p
-      v-if="topRatedCharacters.length === 0"
-      class="text-slate-300"
-    >
-      Todavía no hay personajes puntuados.
-    </p>
-
-    <div
-      v-else
-      class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5"
-    >
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5">
       <RouterLink
         v-for="character in topRatedCharacters"
         :key="character._id"
@@ -42,15 +32,9 @@ const topRatedCharacters = computed(() => {
             :alt="character.name"
             class="h-40 w-full object-cover"
           >
-
           <div class="p-3">
-            <h3 class="text-sm font-bold text-white">
-              {{ character.name }}
-            </h3>
-
-            <p class="mt-1 text-yellow-400 text-sm">
-              ⭐ {{ character.rating }}
-            </p>
+            <h3 class="text-sm font-bold text-white">{{ character.name }}</h3>
+            <p class="mt-1 text-yellow-400 text-sm">⭐ {{ character.rating }}</p>
           </div>
         </article>
       </RouterLink>

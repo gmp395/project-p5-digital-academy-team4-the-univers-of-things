@@ -15,58 +15,34 @@ const charactersPerPage = 15
 
 const filteredCharacters = computed(() => {
   return charactersStore.characters.filter((personaje) =>
-    personaje.name
-      .toLowerCase()
-      .includes(charactersStore.search.toLowerCase())
+    personaje.name.toLowerCase().includes(charactersStore.search.toLowerCase())
   )
 })
 
-const totalPages = computed(() => {
-  return Math.ceil(filteredCharacters.value.length / charactersPerPage)
-})
+const totalPages = computed(() =>
+  Math.ceil(filteredCharacters.value.length / charactersPerPage)
+)
 
 const paginatedCharacters = computed(() => {
   const start = (currentPage.value - 1) * charactersPerPage
-  const end = start + charactersPerPage
-
-  return filteredCharacters.value.slice(start, end)
+  return filteredCharacters.value.slice(start, start + charactersPerPage)
 })
 
-const nextPage = () => {
-  if (currentPage.value < totalPages.value) {
-    currentPage.value++
-  }
-}
+const nextPage = () => { if (currentPage.value < totalPages.value) currentPage.value++ }
+const previousPage = () => { if (currentPage.value > 1) currentPage.value-- }
 
-const previousPage = () => {
-  if (currentPage.value > 1) {
-    currentPage.value--
-  }
-}
+watch(() => charactersStore.search, () => { currentPage.value = 1 })
 
-watch(
-  () => charactersStore.search,
-  () => {
-    currentPage.value = 1
-  }
-)
-
-onMounted(() => {
-  charactersStore.fetchCharacters()
-})
+onMounted(() => { charactersStore.fetchCharacters() })
 </script>
 
 <template>
   <main class="min-h-screen bg-slate-950 px-8 py-4">
     <Hero />
-
     <TopRatedCharacters />
-
     <BarraBusqueda />
 
-    <h1 class="mb-4 text-2xl font-bold text-white">
-      Disney Characters
-    </h1>
+    <h1 class="mb-4 text-2xl font-bold text-white">Disney Characters</h1>
 
     <Spinner v-if="charactersStore.loading" />
 
@@ -92,9 +68,7 @@ onMounted(() => {
       >
         Anterior
       </button>
-
       <span>Página {{ currentPage }} de {{ totalPages }}</span>
-
       <button
         @click="nextPage"
         :disabled="currentPage === totalPages"
