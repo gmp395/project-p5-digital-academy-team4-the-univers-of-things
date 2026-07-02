@@ -6,7 +6,7 @@ import { RouterLink } from 'vue-router'
 const favoritesStore = useFavoritesStore()
 
 const topRatedCharacters = computed(() => {
-  return favoritesStore.favorites
+  return favoritesStore.ratings
     .filter((character) => character.rating > 0)
     .sort((a, b) => b.rating - a.rating)
     .slice(0, 5)
@@ -36,19 +36,19 @@ const topRatedCharacters = computed(() => {
         :to="`/character/${character._id}`"
         class="block cursor-pointer"
       >
-        <article class="overflow-hidden rounded-2xl bg-slate-800 shadow-lg transition hover:-translate-y-1 hover:shadow-2xl">
+        <article class="overflow-hidden rounded-xl bg-slate-800 shadow-lg transition hover:-translate-y-1 hover:shadow-2xl">
           <img
             :src="character.imageUrl"
             :alt="character.name"
-            class="h-72 w-full object-cover"
+            class="h-40 w-full object-cover"
           >
 
-          <div class="p-4">
-            <h3 class="text-lg font-bold text-white">
+          <div class="p-3">
+            <h3 class="text-sm font-bold text-white">
               {{ character.name }}
             </h3>
 
-            <p class="mt-2 text-yellow-400">
+            <p class="mt-1 text-yellow-400 text-sm">
               ⭐ {{ character.rating }}
             </p>
           </div>
