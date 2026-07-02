@@ -1,10 +1,118 @@
+<script setup>
+import { computed, onMounted, ref } from 'vue'
+import { Eye, EyeOff } from 'lucide-vue-next'
+import UserSidebar from '@/components/user/UserSidebar.vue'
+import Footer from '@/components/Footer.vue'
+import { useAuthStore } from '@/stores/authStore'
+
+const authStore = useAuthStore()
+const characters = ref([])
+const selectedCharacterId = ref('')
+const selectedAvatar = ref(localStorage.getItem('userAvatar') || '')
+const selectedCharacterName = ref(localStorage.getItem('userAvatarName') || '')
+const selectedLetter = ref('')
+const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
+const searchCharacter = ref('')
+const currentPassword = ref('')
+const newPassword = ref('')
+const confirmPassword = ref('')
+const showCurrentPassword = ref(false)
+const showNewPassword = ref(false)
+const showConfirmPassword = ref(false)
+const passwordError = ref('')
+const passwordSuccess = ref('')
+
+const filteredCharacters = computed(() => {
+  const search = searchCharacter.value.trim().toLowerCase()
+  return characters.value.filter((character) => {
+    const name = character.name.toLowerCase()
+    const matchesLetter = selectedLetter.value ? name.startsWith(selectedLetter.value.toLowerCase()) : true
+    const matchesSearch = search ? name.includes(search) : true
+    return matchesLetter && matchesSearch
+  }).sort((a, b) => a.name.localeCompare(b.name))
+})
+
+const selectedCharacter = computed(() =>
+  characters.value.find((character) => character._id === Number(selectedCharacterId.value))
+)
+
+const getCharacters = async () => {
+  try {
+    const firstResponse = await fetch('https://api.disneyapi.dev/character?page=1&pageSize=50')
+    const firstData = await firstResponse.json()
+    const totalPages = firstData.info.totalPages
+    const requests = []
+    for (let page = 1; page <= totalPages; page++) {
+      requests.push(fetch(`https://api.disneyapi.dev/character?page=${page}&pageSize=50`).then((r) => r.json()))
+    }
+    const pages = await Promise.all(requests)
+    characters.value = pages.flatMap((p) => p.data).filter((c) => c.imageUrl).sort((a, b) => a.name.localeCompare(b.name))
+  } catch (error) {
+    console.error('Error al cargar personajes Disney:', error)
+  }
+}
+
+const updateAvatar = () => {
+  if (!selectedCharacter.value) return
+  selectedAvatar.value = selectedCharacter.value.imageUrl
+  selectedCharacterName.value = selectedCharacter.value.name
+  localStorage.setItem('userAvatar', selectedAvatar.value)
+  localStorage.setItem('userAvatarName', selectedCharacterName.value)
+
+  const users = JSON.parse(localStorage.getItem('users') || '[]')
+  const idx = users.findIndex(u => u.email === authStore.user?.email)
+  if (idx !== -1) {
+    users[idx].avatar = selectedAvatar.value
+    localStorage.setItem('users', JSON.stringify(users))
+  }
+
+  window.dispatchEvent(new Event('avatar-updated'))
+}
+
+const updatePassword = () => {
+  passwordError.value = ''
+  passwordSuccess.value = ''
+
+  if (!currentPassword.value) {
+    passwordError.value = 'Ingresa tu contraseña actual.'
+    return
+  }
+  if (!newPassword.value || newPassword.value.length < 6) {
+    passwordError.value = 'La nueva contraseña debe tener al menos 6 caracteres.'
+    return
+  }
+  if (newPassword.value !== confirmPassword.value) {
+    passwordError.value = 'Las contraseñas no coinciden.'
+    return
+  }
+
+  const users = JSON.parse(localStorage.getItem('users') || '[]')
+  const idx = users.findIndex(u => u.email === authStore.user?.email)
+
+  if (idx === -1 || users[idx].password !== currentPassword.value) {
+    passwordError.value = 'La contraseña actual es incorrecta.'
+    return
+  }
+
+  users[idx].password = newPassword.value
+  localStorage.setItem('users', JSON.stringify(users))
+
+  currentPassword.value = ''
+  newPassword.value = ''
+  confirmPassword.value = ''
+  passwordSuccess.value = 'Contraseña actualizada correctamente.'
+}
+
+onMounted(() => { getCharacters() })
+</script>
+
 <template>
   <div class="settings-page">
     <UserSidebar />
     <div class="settings-page__right">
       <main class="settings-page__content">
         <section class="settings-page__header">
-          <h1 >Ajustes de cuenta</h1>
+          <h1>Ajustes de cuenta</h1>
           <p>Gestiona tu avatar y cambia tu contraseña.</p>
         </section>
 
@@ -72,7 +180,9 @@
                 </div>
               </label>
             </div>
-            <button type="button">Actualizar contraseña</button>
+            <p v-if="passwordError" class="settings-page__error">{{ passwordError }}</p>
+            <p v-if="passwordSuccess" class="settings-page__success">{{ passwordSuccess }}</p>
+            <button type="button" @click="updatePassword">Actualizar contraseña</button>
           </form>
         </section>
       </main>
@@ -81,73 +191,13 @@
   </div>
 </template>
 
-<script setup>
-import { computed, onMounted, ref } from 'vue'
-import { Eye, EyeOff } from 'lucide-vue-next'
-import UserSidebar from '@/components/user/UserSidebar.vue'
-import Footer from '@/components/Footer.vue'
-
-const characters = ref([])
-const selectedCharacterId = ref('')
-const selectedAvatar = ref(localStorage.getItem('userAvatar') || '')
-const selectedCharacterName = ref(localStorage.getItem('userAvatarName') || '')
-const selectedLetter = ref('')
-const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
-const searchCharacter = ref('')
-const currentPassword = ref('')
-const newPassword = ref('')
-const confirmPassword = ref('')
-const showCurrentPassword = ref(false)
-const showNewPassword = ref(false)
-const showConfirmPassword = ref(false)
-
-const filteredCharacters = computed(() => {
-  const search = searchCharacter.value.trim().toLowerCase()
-  return characters.value.filter((character) => {
-    const name = character.name.toLowerCase()
-    const matchesLetter = selectedLetter.value ? name.startsWith(selectedLetter.value.toLowerCase()) : true
-    const matchesSearch = search ? name.includes(search) : true
-    return matchesLetter && matchesSearch
-  }).sort((a, b) => a.name.localeCompare(b.name))
-})
-
-const selectedCharacter = computed(() =>
-  characters.value.find((character) => character._id === Number(selectedCharacterId.value))
-)
-
-const getCharacters = async () => {
-  try {
-    const firstResponse = await fetch('https://api.disneyapi.dev/character?page=1&pageSize=50')
-    const firstData = await firstResponse.json()
-    const totalPages = firstData.info.totalPages
-    const requests = []
-    for (let page = 1; page <= totalPages; page++) {
-      requests.push(fetch(`https://api.disneyapi.dev/character?page=${page}&pageSize=50`).then((r) => r.json()))
-    }
-    const pages = await Promise.all(requests)
-    characters.value = pages.flatMap((p) => p.data).filter((c) => c.imageUrl).sort((a, b) => a.name.localeCompare(b.name))
-  } catch (error) {
-    console.error('Error al cargar personajes Disney:', error)
-  }
-}
-
-const updateAvatar = () => {
-  if (!selectedCharacter.value) return
-  selectedAvatar.value = selectedCharacter.value.imageUrl
-  selectedCharacterName.value = selectedCharacter.value.name
-  localStorage.setItem('userAvatar', selectedAvatar.value)
-  localStorage.setItem('userAvatarName', selectedCharacterName.value)
-  window.dispatchEvent(new Event('avatar-updated'))
-}
-
-onMounted(() => { getCharacters() })
-</script>
-
 <style scoped lang="scss">
 .settings-page {
   display: flex;
   min-height: 100vh;
   background: #0f172a;
+  .settings-page__error { color: #fca5a5; font-size: 0.875rem; }
+  .settings-page__success { color: #86efac; font-size: 0.875rem; }
 }
 
 .settings-page__right {
@@ -175,8 +225,6 @@ onMounted(() => { getCharacters() })
 
   p { color: #cbd5e1; }
 }
-
-
 
 .settings-page__card {
   max-width: 760px;
@@ -234,7 +282,7 @@ onMounted(() => { getCharacters() })
 
   label { color: #cbd5e1; font-size: 0.9rem; display: flex; flex-direction: column; gap: 8px; }
   input { background: #253247; border: 1px solid #334155; border-radius: 8px; padding: 12px; color: white; }
-  button { align-self: flex-end; background: #93c5fd; color: #0f172a; border: none; border-radius: 8px; padding: 12px 18px; font-weight: 700; cursor: pointer; }
+  button[type="button"]:last-child { align-self: flex-end; background: #93c5fd; color: #0f172a; border: none; border-radius: 8px; padding: 12px 18px; font-weight: 700; cursor: pointer; }
 }
 
 .settings-page__form-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
@@ -260,6 +308,9 @@ onMounted(() => { getCharacters() })
 
   &:hover { color: #ffffff; }
 }
+
+.settings-page__error { color: #fca5a5; font-size: 0.875rem; }
+.settings-page__success { color: #86efac; font-size: 0.875rem; }
 
 @media (max-width: 1000px) {
   .settings-page { flex-direction: column; }

@@ -1,6 +1,25 @@
+<script setup>
+import { onMounted, onUnmounted } from 'vue'
+import { useAdminStore } from '@/stores/adminStore'
+
+const adminStore = useAdminStore()
+
+const refresh = () => adminStore.refreshUsers()
+
+onMounted(() => {
+  adminStore.refreshUsers()
+  window.addEventListener('avatar-updated', refresh)
+  window.addEventListener('storage', refresh)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('avatar-updated', refresh)
+  window.removeEventListener('storage', refresh)
+})
+</script>
+
 <template>
   <div class="admin-directory">
-
     <h1 class="admin-directory__title">Directorio de usuarios</h1>
 
     <div class="table-container bg-surface-container border glass-stroke rounded-2xl overflow-hidden shadow-sm">
@@ -8,7 +27,6 @@
         <table class="w-full text-left border-collapse">
           <thead>
             <tr class="bg-surface-container-high border-b glass-stroke">
-              <th class="px-6 py-5 font-label-lg text-label-lg text-primary">Avatar</th>
               <th class="px-6 py-5 font-label-lg text-label-lg text-primary">Nombre completo</th>
               <th class="px-6 py-5 font-label-lg text-label-lg text-primary">Correo electrónico</th>
               <th class="px-6 py-5 font-label-lg text-label-lg text-primary text-center">Estado de acceso</th>
@@ -16,18 +34,13 @@
           </thead>
           <tbody class="divide-y glass-stroke">
             <tr v-for="user in adminStore.users" :key="user.email" class="hover:bg-surface-container-low transition-colors group">
-              <td class="px-6 py-4">
-                <div class="w-12 h-12 rounded-full overflow-hidden border-2 border-surface-variant group-hover:border-primary transition-colors">
-                  <img :src="user.avatar || `https://i.pravatar.cc/60?u=${user.email}`" :alt="user.name" class="w-full h-full object-cover" />
-                </div>
-              </td>
               <td class="px-6 py-4 font-body-md text-on-surface font-semibold">{{ user.name }}</td>
               <td class="px-6 py-4 font-body-sm text-on-surface-variant">{{ user.email }}</td>
               <td class="px-6 py-4 text-center">
                 <button
                   @click="adminStore.toggleUserStatus(user.email)"
                   :class="[
-                    'w-14 h-7 flex items-center rounded-full p-1 transition-all duration-300 border glass-stroke',
+                    'w-14 h-7 flex items-center rounded-full p-1 transition-all duration-300 border glass-stroke mx-auto',
                     user.status === 'allowed' ? 'bg-primary' : 'bg-surface-variant'
                   ]"
                 >
@@ -46,17 +59,6 @@
     </div>
   </div>
 </template>
-
-<script setup>
-import { onMounted } from 'vue'
-import { useAdminStore } from '@/stores/adminStore'
-
-const adminStore = useAdminStore()
-
-onMounted(() => {
-  adminStore.refreshUsers()
-})
-</script>
 
 <style scoped lang="scss">
 .admin-directory {
