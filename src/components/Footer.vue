@@ -1,0 +1,127 @@
+<script setup>
+import { Instagram } from 'lucide-vue-next'
+</script>
+
+<template>
+  <footer class="footer">
+    <div class="footer__container">
+      <div class="footer__brand">
+        <span class="footer__logo-text">CineMagic</span>
+      </div>
+
+      <p class="footer__copyright">
+        © 2026 CineMagic. Todos los derechos reservados.
+      </p>
+
+      <nav class="footer__social" aria-label="Redes sociales">
+        <a href="https://www.instagram.com/the_cinemagic_/?hl=es" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+          <Instagram />
+        </a>
+        <a href="https://x.com/Cinemagic" target="_blank" rel="noopener noreferrer" aria-label="X">
+          <span class="footer__x-icon">𝕏</span>
+        </a>
+      </nav>
+    </div>
+  </footer>
+</template>
+
+<style scoped lang="scss">
+.footer {
+  background-color: #0f172a;
+  color: #cbd5e1;
+  padding: 8px 40px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.footer__container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.footer__brand {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.footer__logo-text {
+  font-size: 1.1rem;
+  font-family: Arial, sans-serif;
+  font-weight: bold;
+  color: #cbd5e1;
+}
+
+.footer__copyright {
+  flex: 1;
+  margin: 0;
+  font-size: 12px;
+  color: #cbd5e1;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.footer__social {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 22px;
+}
+
+.footer__social a {
+  display: flex;
+  align-items: center;
+  color: #cbd5e1;
+  transition: color 0.2s ease;
+  text-decoration: none;
+}
+
+.footer__social a:hover {
+  color: #60a5fa;
+}
+
+.footer__social svg {
+  width: 18px;
+  height: 18px;
+}
+
+.footer__x-icon {
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  font-weight: 700;
+  height: 18px;
+  line-height: 18px;
+}
+
+@media (max-width: 640px) {
+  .footer {
+    padding: 12px 20px;
+  }
+
+  .footer__container {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .footer__brand,
+  .footer__social {
+    justify-content: center;
+  }
+
+  .footer__logo-text {
+    font-size: 1rem;
+  }
+
+  .footer__copyright {
+    white-space: normal;
+  }
+}
+</style>
