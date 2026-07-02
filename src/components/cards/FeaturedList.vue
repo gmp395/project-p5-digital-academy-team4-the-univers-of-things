@@ -12,9 +12,8 @@
       <p v-if="featuredStore.isFull" class="text-white font-bold mt-3">
         Has alcanzado el máximo de {{ featuredStore.maxFeatured }} destacados.
       </p>
-      <p v-if="loading" class="text-on-surface-variant mt-3">Cargando personajes...</p>
-      <p v-if="errorMessage" class="text-red-400 mt-3">{{ errorMessage }}</p>
-      <p v-if="!query.trim() && !loading" class="text-on-surface-variant mt-3">
+      <p v-if="charactersStore.loading" class="text-on-surface-variant mt-3">Cargando personajes...</p>
+      <p v-if="!query.trim() && !charactersStore.loading" class="text-on-surface-variant mt-3">
         Escribe un nombre para buscar.
       </p>
 
@@ -117,33 +116,23 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useFeaturedStore } from '@/stores/FeaturedStore'
+import { useCharactersStore } from '@/stores/charactersStore'
 
 const featuredStore = useFeaturedStore()
+const charactersStore = useCharactersStore()
 
-const allCharacters = ref([])
 const query = ref('')
-const loading = ref(false)
-const errorMessage = ref('')
 
-async function loadCharacters() {
-  loading.value = true
-  errorMessage.value = ''
-  try {
-    const response = await fetch('https://api.disneyapi.dev/character')
-    const data = await response.json()
-    allCharacters.value = data.data || []
-  } catch (error) {
-    errorMessage.value = 'Error al cargar personajes.'
-  } finally {
-    loading.value = false
+// Usa el cache del store en vez de hacer fetch propio
+onMounted(() => {
+  if (!charactersStore.characters.length) {
+    charactersStore.fetchCharacters()
   }
-}
-
-onMounted(loadCharacters)
+})
 
 const filteredCharacters = computed(() => {
   if (!query.value.trim()) return []
-  return allCharacters.value.filter(c =>
+  return charactersStore.characters.filter(c =>
     c.name.toLowerCase().includes(query.value.toLowerCase())
   )
 })
@@ -177,9 +166,7 @@ function handleFileUpload(event) {
   if (!file) return
   fileName.value = file.name
   const reader = new FileReader()
-  reader.onload = (e) => {
-    editImageUrl.value = e.target.result
-  }
+  reader.onload = (e) => { editImageUrl.value = e.target.result }
   reader.readAsDataURL(file)
 }
 
