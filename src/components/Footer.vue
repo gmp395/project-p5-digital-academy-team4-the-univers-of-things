@@ -14,10 +14,10 @@ import { Instagram } from 'lucide-vue-next'
       </p>
 
       <nav class="footer__social" aria-label="Redes sociales">
-        <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+        <a href="https://www.instagram.com/the_cinemagic_/?hl=es" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
           <Instagram />
         </a>
-        <a href="https://www.x.com" target="_blank" rel="noopener noreferrer" aria-label="X">
+        <a href="https://x.com/Cinemagic" target="_blank" rel="noopener noreferrer" aria-label="X">
           <span class="footer__x-icon">𝕏</span>
         </a>
       </nav>
